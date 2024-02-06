@@ -5,7 +5,7 @@
 2. Qianyu Shang #18991588
 3. Wenrui Chen #56362320
 ### Description
-	Our group decided to work on the MyDiscussionForum website that allows registered users to engage in online discussions and users without registration are only able to access read-only for the discussions. The overall platform will be similar to forums such as Reddit and HackerNews. The primary goal is to provide a space for registered users to engage in discussions by posting stories, making comments, and exchanging ideas while unregistered users will have the ability to browse and search for content but won't be able to participate actively in discussions. Additionally, the administrator can delete registered users’ posts or comments, which works like censorship.
+Our group decided to work on the MyDiscussionForum website that allows registered users to engage in online discussions and users without registration are only able to access read-only for the discussions. The overall platform will be similar to forums such as Reddit and HackerNews. The primary goal is to provide a space for registered users to engage in discussions by posting stories, making comments, and exchanging ideas while unregistered users will have the ability to browse and search for content but won't be able to participate actively in discussions. Additionally, the administrator can delete registered users’ posts or comments, which works like censorship.
 ### Requirements list
 
 1. User Signup:
