@@ -1,0 +1,122 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('./background.jpg'); 
+    background-size: cover;
+    background-position: center; 
+
+}
+
+
+.container {
+    width: 30%;
+    margin: 0 auto;
+    /* border: 2px solid #ccc; */
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 8%;
+    vertical-align:middle;
+    /* background: white; */
+    background-image: url('./background.jpg'); 
+    background-size: cover;
+    background-position: center; 
+
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.name h1 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #f2bf17;
+    font-size: 50px;
+    font-family: 'Pacifico', cursive;
+}
+.container h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #f2bf17;
+    font-size: 36px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type=text],
+input[type=email],
+input[type=password] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 18px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 10px;
+    
+}
+
+button {
+    background-color: #f2bf17;
+    color: black;
+    font-weight: bold;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 8px;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+.form-group span#toggleText{
+    cursor: pointer;
+    color: black;
+    font-weight: bold;
+    right: 10px;
+    margin-bottom: 8px;
+    position: absolute;
+    /* text-decoration: underline; */
+}
+.form-group span#toggleText:hover{
+    text-decoration: underline;
+    color:#f2bf17;
+    font-weight: bold;
+}
+.passwContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+#password {
+    flex-grow: 1;
+}
+
+.goToLogin {
+    text-align: center;
+    margin-bottom: 12px;
+
+}
+.goToLogin a {
+    color:black;
+    font-weight: bold;
+}
+.goToLogin a:hover{
+    text-decoration:underline;
+    color:#f2bf17;
+}
+
+
