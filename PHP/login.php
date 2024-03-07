@@ -3,7 +3,7 @@
 
 <head lang="en">
     <meta charset="utf-8">
-    <title>chatSite</title>
+    <title>Bloggie</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../CSS/signup.css">
     <script defer>
@@ -35,7 +35,7 @@
                 const hasLowerCase = /[a-z]/.test(password);
                 const hasUpperCase = /[A-Z]/.test(password);
                 const hasNumber = /\d/.test(password);
-                const hasSymbol = /\W|_/.test(password);
+                const hasSymbol = /[!@#$%^&*()-=_+{}[\]|;:'",.<>?/]/.test(password);
                 return hasLowerCase && hasUpperCase && hasNumber && hasSymbol;
             }
 
@@ -79,7 +79,7 @@
                 </div>
             </div>
             <div class="goToLogin">
-                Don't have an account? <a href="#">Click here</a> to register.
+                Don't have an account? <a href="signup.php">Click here</a> to register.
             </div>
             <button type="submit">Sign in</button>
         </form>
