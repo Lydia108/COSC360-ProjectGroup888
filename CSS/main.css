@@ -1,0 +1,249 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('../Images/22224277_15253.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /* text-align: center; */
+
+}
+
+.sidebar {
+    width: 100%;
+    height: 70px;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar a {
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    transition: color 0.3s;
+}
+
+.sidebar a:hover {
+    color: #f2bf17;
+    text-decoration: underline;
+}
+
+.sidebar .info {
+    display: flex;
+    align-items: center;
+}
+
+.sidebar .info a {
+    font-size: 20px;
+    margin-right: 15px;
+}
+
+.sidebar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 30px;
+}
+
+
+.sidebar .actions {
+    display: flex;
+    align-items: center;
+}
+
+.sidebar .actions a {
+    margin-right: 20px;
+}
+
+.sidebar .search-bar {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    /* border-radius: 20px; */
+    width: 800px;
+
+}
+
+.sidebar .search-bar input[type="text"] {
+    padding: 5px;
+    margin-right: 5px;
+    flex-grow: 1;
+    border-radius: 20px;
+
+}
+
+.sidebar .search-bar button {
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 5px 10px;
+}
+
+.navBar {
+    margin-top: 100px;
+    float: right;
+    margin-left:85%;
+    overflow: visible;
+    width: 100px;
+    margin-right: 100px;
+    font-weight: bold;
+    position: fixed; /* 固定位置，不随滚动条滚动 */
+    z-index: 1000; /* 确保导航栏在页面上的其他内容之上 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 添加一些阴影效果，使其更有层次感 */
+    padding: 10px 0; /* 添加一些内边距，根据需要调整 */
+
+}
+
+
+.navBar > button {
+    margin-right: 10px; /* 按钮之间的间隔 */
+}
+
+
+.navBar button {
+    border-radius: 20px;
+    margin-bottom: 10px;
+    background-color: rgba(255, 253, 253, 0.911);
+    font-size: 18px;
+    padding: 10px 10px;
+    font-weight: bold;
+}
+
+.post {
+    float: left;
+    margin-top: 100px;
+    margin-left: 50px;
+    margin-right: 50px;
+    width: 75%;
+    height: 600px;
+    border-radius: 20px;
+    background-color: rgba(255, 253, 253, 0.5);
+}
+
+.post img {
+    margin-left: 30px;
+    margin-top: 2px;
+    width: 50%;
+    height: 73%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+.post p.title {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 26px;
+    margin-top: 20px;
+    margin-left: 30px;
+}
+
+.post .context {
+    background-color: #f3cd4f;
+    border-radius: 10px;
+    float: right;
+    width: 40%;
+    height: 70%;
+    overflow: hidden;
+    margin-right: 30px;
+    padding: 10px 20px;
+
+
+
+}
+.post .context p {
+    /* width: 90%; */
+    font-size: 24px;
+    font-weight: bold;
+    padding: 5px 5px;
+    overflow: hidden;
+    width: 100%; 
+    word-wrap:break-word;
+}
+
+/* .post .comment input {
+    margin-left: 30px;
+    margin-top: 20px;
+    border-radius: 10px;
+    width: 70%;
+    /* height: ; */
+    /* padding: 10px 10px; */
+/* } */
+/* .post .comment i {
+    margin-left: 5px;
+    color: black;
+    font-size: 22px;
+} */
+/* .post .comment i:hover{
+    text-decoration: underline;
+    color: #f2bf17;
+} */ 
+.sidebar .search-bar i{
+    color: black;
+    font-size: 22px;
+
+}
+.sidebar .search-bar i:hover{
+    text-decoration: underline;
+    color: #f2bf17;
+    cursor: pointer;
+}
+
+.user img{
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    margin-top: 5px;
+    /* display: inline-block; */
+}
+.user #test,#username,#count{
+    display: inline-block; /* Makes elements line up horizontally */
+    vertical-align: middle; 
+    margin-right: 5px; 
+}
+.user .username{
+    margin: 0; /* Removes default margin/padding from <p> to prevent unwanted space */
+
+}
+.user #thumbsup{
+    display: inline-block; /* Makes elements line up horizontally */
+    vertical-align: middle; 
+    margin-left: 78%;
+    margin-right: 5px;
+    font-size: 22px;
+    color: black;
+}
+
+.user #thumbsup1{
+    display: inline-block; 
+    vertical-align: middle; 
+    margin-left: 78%;
+    margin-right: 5px;
+    font-size: 22px;
+    color: black;
+
+}
+.user #thumbsup:hover{
+    text-decoration: underline;
+}
+.user #thumbsup1:hover{
+    text-decoration: underline;
+}
+.user #count{
+    display: inline-block; 
+    vertical-align: middle; 
+    margin-left: 90%;
+    margin-right: 5px;
+    font-size: 22px;
+}
+
