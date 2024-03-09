@@ -74,7 +74,15 @@
     </div>
 
     <div class="site-footer">
-        <p>&copy; 2024 Bloggie. All rights reserved.</p>
+        <footer class="app">Bloggie</footer>
+        <footer class="intro">The simplest way to connect with others through questions and answers.</footer>
+        <footer class="contact">Stay contact with us:</footer>
+        <footer class="icon">
+            <img src="../Images/linkedin.png"/>
+            <img src="../Images/x.webp"/>
+            <img src="../Images/ins.webp"/>
+        </footer>
+        <footer class="copyright">&copy; 2024 Bloggie. All rights reserved.</footer>
     </div>
 
 
