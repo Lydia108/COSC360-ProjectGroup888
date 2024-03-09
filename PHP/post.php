@@ -11,20 +11,30 @@
     <script src="https://kit.fontawesome.com/d1344ce34d.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/0485a9f289.js" crossorigin="anonymous"></script>
     <script>
-    function toggleLike() {
-        var like = document.getElementById("thumbsup");
-        var like1 = document.getElementById("thumbsup1");
+        function toggleLike() {
+            var like = document.getElementById("thumbsup");
+            var like1 = document.getElementById("thumbsup1");
 
-        // Toggle visibility
-        if (like.style.display === "none") {
-            like.style.display = "inline-block";
-            like1.style.display = "none";
-        } else {
-            like.style.display = "none";
-            like1.style.display = "inline-block";
+            // Toggle visibility
+            if (like.style.display === "none") {
+                like.style.display = "inline-block";
+                like1.style.display = "none";
+            } else {
+                like.style.display = "none";
+                like1.style.display = "inline-block";
+            }
         }
-    }
     </script>
+
+    <style>
+        .dynamic-button {
+            margin-right: 10px;
+            /* Adjust as needed */
+            padding: 5px 10px;
+            /* Adjust as needed */
+        }
+    </style>
+
 </head>
 
 
@@ -43,6 +53,61 @@
             </div>
         </div>
     </div>
+
+    <div class="navBar">
+        <p>Tags/Categories</p>
+        <button>Sport</button>
+        <button>Makeup</button>
+        <button>Music</button>
+        <button>Food</button>
+        <button>Movie</button>
+        <!-- <input class="newTag" placeholder="Add new tag"></input> -->
+
+        <input class="newTag" id="newTag" placeholder="Add new tag" style="width: auto; min-width: 120px;" />
+        <span id="textWidthCalculator" style="visibility: hidden; position: absolute;"></span>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const newTagInput = document.getElementById('newTag');
+            const calculatorSpan = document.getElementById('textWidthCalculator');
+            const navBar = document.querySelector('.navBar');
+
+            // Adjust newTag input width based on its content
+            function adjustInputWidth() {
+                calculatorSpan.textContent = newTagInput.value || newTagInput.placeholder;
+                newTagInput.style.width = `${calculatorSpan.offsetWidth + 10}px`; // +10 for padding
+            }
+
+            newTagInput.addEventListener('input', adjustInputWidth);
+
+            // Initially adjust input width
+            adjustInputWidth();
+
+            // Function to add a new tag button
+            function addNewTag(tagText) {
+                const newButton = document.createElement('button');
+                newButton.textContent = tagText;
+                newButton.className = 'dynamic-button'; // Use this class to style your buttons
+                // Insert the new button before the newTag input box
+                navBar.insertBefore(newButton, newTagInput);
+            }
+
+            // Listen for Enter key in newTag input
+            newTagInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent form submission if any
+                    if (newTagInput.value.trim() !== '') {
+                        addNewTag(newTagInput.value.trim());
+                        newTagInput.value = ''; // Clear input
+                        adjustInputWidth(); // Reset input width
+                    }
+                }
+            });
+        });
+    </script>
+
     <div class="post">
         <input class="title" placeholder="Edit title..." />
         <br>
@@ -59,6 +124,8 @@
         </div> -->
 
     </div>
+
+
 
 
     <div class="site-footer">

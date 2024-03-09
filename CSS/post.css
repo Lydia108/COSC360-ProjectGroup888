@@ -243,3 +243,34 @@ body {
     cursor: pointer;
     
 }
+
+.navBar {
+    margin-top: 100px;
+    float: right;
+    margin-left:85%;
+    overflow: visible;
+    width: 100px;
+    margin-right: 100px;
+    font-weight: bold;
+    position: fixed; /* 固定位置，不随滚动条滚动 */
+    z-index: 1000; /* 确保导航栏在页面上的其他内容之上 */
+    padding: 10px 0; /* 添加一些内边距，根据需要调整 */
+
+}
+
+
+.navBar > button, input{
+    margin-right: 10px; /* 按钮之间的间隔 */
+    width: auto;
+    min-width: 30px;
+}
+
+
+.navBar button,input {
+    border-radius: 20px;
+    margin-bottom: 10px;
+    background-color: rgba(255, 253, 253, 0.911);
+    font-size: 18px;
+    padding: 10px 10px;
+    font-weight: bold;
+}
