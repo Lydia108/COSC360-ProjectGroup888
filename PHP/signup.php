@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../CSS/signup.css">
     <script defer>
         window.addEventListener('DOMContentLoaded', (event) => {
-            document.querySelector("form[name='handleSignup']").addEventListener("submit", function (e) {
+            document.querySelector("form[name='handleSignup']").addEventListener("submit", function(e) {
                 const pass = document.querySelector("input[name='password']").value;
                 const fname = document.querySelector("input[name='firstName']").value;
                 const lname = document.querySelector("input[name='lastName']").value;
@@ -73,6 +73,11 @@
         <form name="handleSignup" action="#" onsubmit="return validateForm();" method="post">
             <h2>Register now!</h2>
             <!-- <div class="row"> -->
+            <div class="avatar">
+                <a href="#">
+                    <img src="../Images/profile.jpg" />
+                </a>
+            </div>
             <div class="form-group">
                 <label for="firstName">First Name: </label>
                 <input type="text" placeholder="Please type your first name" id="firstName" name="firstName" required>
@@ -89,13 +94,14 @@
             <div class="form-group">
                 <label for="password">Password:</label>
                 <div class="passwContainer">
-                    <input type="password" placeholder="Length: 6 - 30 characters" id="password" name="password"
-                        required>
+                    <input type="password" placeholder="Length: 6 - 30 characters" id="password" name="password" required>
                     <span id="toggleText" onclick="togglePasswordVisibility()">Show</span>
                 </div>
             </div>
+
+
             <div class="goToLogin">
-                Already have an account? <a href="login.php">Click here</a> to register.
+                Already have an account? <a href="login.php">Click here</a> to login.
             </div>
             <button type="submit">Sign up</button>
         </form>

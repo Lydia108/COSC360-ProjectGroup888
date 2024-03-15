@@ -65,6 +65,7 @@
         <form name="handleSignup" action="#" onsubmit="return validateForm();" method="post">
             <h2>Sign in!</h2>
             <!-- <div class="row"> -->
+            <img src="../Images/profile.jpg" />
 
             <div class="form-group">
                 <label for="email">Email Address:</label>
@@ -80,8 +81,10 @@
             </div>
             <div class="goToLogin">
                 Don't have an account? <a href="signup.php">Click here</a> to register.
+                <br>
+                <button type="guest">Login as a guest</button>
             </div>
-            <button type="submit">Sign in</button>
+            <button type="submit" id="guest">Sign in</button>
         </form>
         <p id="error-message" style="color: red;"></p>
     </div>
