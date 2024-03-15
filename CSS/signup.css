@@ -67,12 +67,28 @@ input[type=password] {
     
 }
 
+.avatar img{
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    /* justify-content: center; */
+
+    margin-left: 42%;
+}
+img{
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    /* justify-content: center; */
+
+    margin-left: 42%; 
+}
 button {
     background-color: #f2bf17;
     color: black;
     font-weight: bold;
     padding: 14px 20px;
-    margin: 8px 0;
+    margin: 10px 0;
     border: none;
     cursor: pointer;
     width: 100%;
