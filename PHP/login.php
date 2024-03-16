@@ -7,54 +7,93 @@
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../CSS/signup.css">
     <script defer>
-        window.addEventListener('DOMContentLoaded', (event) => {
-            document.querySelector("form[name='handleSignup']").addEventListener("submit", function (e) {
-                const pass = document.querySelector("input[name='password']").value;
-                const email = document.querySelector("input[name='email']").value;
-                const errorMessage = document.getElementById("error-message");
+    window.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelector("form[name='handleSignup']").addEventListener("submit", function(e) {
+            const pass = document.querySelector("input[name='password']").value;
+            const email = document.querySelector("input[name='email']").value;
+            const errorMessage = document.getElementById("error-message");
 
-                errorMessage.textContent = "";
-                if (!isValidEmail(email)) {
-                    e.preventDefault();
-                    errorMessage.textContent += "Invalid email format, e.g., user@example.com\n";
-                }
-                if (pass.length < 6 || pass.length > 30 || !isValidPassword(pass)) {
-                    e.preventDefault();
-                    pass.value = "";
-                    errorMessage.textContent += "Password must be between 6 and 30 characters and include uppercase, lowercase letters, numbers, and symbols.\n";
-                }
-            });
-
-            function isValidEmail(email) {
-                const atPosition = email.indexOf("@");
-                const dotPosition = email.lastIndexOf(".");
-                return !(atPosition < 1 || dotPosition < atPosition + 2 || dotPosition + 2 >= email.length);
+            errorMessage.textContent = "";
+            if (!isValidEmail(email)) {
+                e.preventDefault();
+                errorMessage.textContent += "Invalid email format, e.g., user@example.com\n";
             }
-
-            function isValidPassword(password) {
-                const hasLowerCase = /[a-z]/.test(password);
-                const hasUpperCase = /[A-Z]/.test(password);
-                const hasNumber = /\d/.test(password);
-                const hasSymbol = /[!@#$%^&*()-=_+{}[\]|;:'",.<>?/]/.test(password);
-                return hasLowerCase && hasUpperCase && hasNumber && hasSymbol;
+            if (pass.length < 6 || pass.length > 30 || !isValidPassword(pass)) {
+                e.preventDefault();
+                pass.value = "";
+                errorMessage.textContent +=
+                    "Password must be between 6 and 30 characters and include uppercase, lowercase letters, numbers, and symbols.\n";
             }
-
-            function togglePasswordVisibility() {
-                var passwordInput = document.getElementById("password");
-                var toggleText = document.getElementById("toggleText");
-                if (passwordInput.type === "password") {
-                    passwordInput.type = "text";
-                    toggleText.textContent = "Hide";
-                } else {
-                    passwordInput.type = "password";
-                    toggleText.textContent = "Show";
-                }
-            }
-
-            document.getElementById("toggleText").addEventListener("click", togglePasswordVisibility);
         });
+
+        function isValidEmail(email) {
+            const atPosition = email.indexOf("@");
+            const dotPosition = email.lastIndexOf(".");
+            return !(atPosition < 1 || dotPosition < atPosition + 2 || dotPosition + 2 >= email.length);
+        }
+
+        function isValidPassword(password) {
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasNumber = /\d/.test(password);
+            const hasSymbol = /[!@#$%^&*()-=_+{}[\]|;:'",.<>?/]/.test(password);
+            return hasLowerCase && hasUpperCase && hasNumber && hasSymbol;
+        }
+
+        function togglePasswordVisibility() {
+            var passwordInput = document.getElementById("password");
+            var toggleText = document.getElementById("toggleText");
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleText.textContent = "Hide";
+            } else {
+                passwordInput.type = "password";
+                toggleText.textContent = "Show";
+            }
+        }
+
+        document.getElementById("toggleText").addEventListener("click", togglePasswordVisibility);
+    });
     </script>
 </head>
+
+
+<?php
+session_start();
+include "connection.php";
+if (isset($_SESSION['error_message'])) {
+    echo "<p style='color:red'>" . $_SESSION['error_message'] . "</p>";
+    unset($_SESSION['error_message']); // Clear the message after displaying it
+}
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST["email"]) && isset($_POST["password"])) {
+        $email = $_POST["email"];
+        $password = $_POST["password"];
+        $sql = "SELECT * FROM user";
+        $results = mysqli_query($conn, $sql);
+
+        $loginValid = false;
+        while ($row = mysqli_fetch_assoc($results)) {
+            if ($email == $row['emailAddress'] && $password == $row['password']) {
+                $_SESSION['user_id'] = $row['userId'];
+                $loginValid = true;
+                break;
+            }
+        }
+
+        if ($loginValid) {
+            header("Location: main.php");
+            exit();
+        } else {
+            $_SESSION['error_message'] = "Invalid username or password.";
+            header("Location: login.php");
+            exit();
+        }
+    }
+}
+?>
+
+
 
 
 <body>
@@ -62,7 +101,7 @@
         <h1>Bloggie</h1>
     </div>
     <div class="container">
-        <form name="handleSignup" action="#" onsubmit="return validateForm();" method="post">
+        <form name="handleSignup" action="login.php" onsubmit="return validateForm();" method="post">
             <h2>Sign in!</h2>
             <!-- <div class="row"> -->
             <img src="../Images/profile.jpg" />
@@ -86,7 +125,7 @@
             </div>
             <button type="submit" id="guest">Sign in</button>
         </form>
-        <p id="error-message" style="color: red;"></p>
+        <p id="error-message" style="color: red; text-align:center;"></p>
     </div>
 
 </body>

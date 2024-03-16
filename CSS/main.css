@@ -16,7 +16,10 @@ html, body {
     height: 100%;
     margin: 0;
 }
-
+.ses{
+    margin-right: 30px;
+    font-weight: bold;
+}
 .sidebar {
     width: 100%;
     height: 70px;

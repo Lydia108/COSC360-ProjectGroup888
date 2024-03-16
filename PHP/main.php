@@ -10,22 +10,33 @@
     <script src="https://kit.fontawesome.com/d1344ce34d.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/0485a9f289.js" crossorigin="anonymous"></script>
     <script>
-        function toggleLike() {
-            var like = document.getElementById("thumbsup");
-            var like1 = document.getElementById("thumbsup1");
+    function toggleLike() {
+        var like = document.getElementById("thumbsup");
+        var like1 = document.getElementById("thumbsup1");
 
-            // Toggle visibility
-            if (like.style.display === "none") {
-                like.style.display = "inline-block";
-                like1.style.display = "none";
-            } else {
-                like.style.display = "none";
-                like1.style.display = "inline-block";
-            }
+        // Toggle visibility
+        if (like.style.display === "none") {
+            like.style.display = "inline-block";
+            like1.style.display = "none";
+        } else {
+            like.style.display = "none";
+            like1.style.display = "inline-block";
         }
+    }
     </script>
 </head>
+<?php
+session_start();
 
+if (isset($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
+    
+    echo "<div>Welcome, user ID: " . $userId . "</div>";
+} else {
+    header("Location: login.php");
+    exit();
+}
+?>
 
 <body>
     <div class="sidebar">
@@ -39,6 +50,17 @@
             <div class="info">
                 <a href="#">My Profile</a>
                 <img src="../Images/test.jpg" alt="Avatar">
+                <?php
+
+                if (isset($_SESSION['user_id'])) {
+                $userId = $_SESSION['user_id'];
+
+                echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
+                } else {
+                header("Location: login.php");
+                exit();
+                }
+                ?>
             </div>
         </div>
     </div>
@@ -46,10 +68,17 @@
         <p class="title">blablabla</p>
         <img src="../Images/th.jpg" />
         <div class="context">
-            <p>To implement getLikedBlogs(), you will need to connect to your data source (such as a database) to fetch
-                the user's liked blogs. The above code would go in your profile.php file, and the styles in profile.css.
-                Remember that the actual implementation may require additional functionality based on how your data is
-                structured and how the user interacts with the blogs. </p>
+            <p><?php
+
+if (isset($_SESSION['user_id'])) {
+$userId = $_SESSION['user_id'];
+
+echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
+} else {
+header("Location: login.php");
+exit();
+}
+?></p>
         </div>
         <!-- <div class="comment">
             <input type="comment" placeholder="Leave a comment...">
@@ -78,9 +107,9 @@
         <footer class="intro">The simplest way to connect with others through questions and answers.</footer>
         <footer class="contact">Stay contact with us:</footer>
         <footer class="icon">
-            <img src="../Images/linkedin.png"/>
-            <img src="../Images/x.webp"/>
-            <img src="../Images/ins.webp"/>
+            <img src="../Images/linkedin.png" />
+            <img src="../Images/x.webp" />
+            <img src="../Images/ins.webp" />
         </footer>
         <footer class="copyright">&copy; 2024 Bloggie. All rights reserved.</footer>
     </div>
