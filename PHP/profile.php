@@ -12,9 +12,9 @@
 
 <body>
     <div class="sidebar">
-        <a href="#"><i class="fa-solid fa-house-chimney">&nbsp;Home</i></a>
+        <a href="main.php"><i class="fa-solid fa-house-chimney">&nbsp;Home</i></a>
         <div class="actions">
-            <a href="#">Make Post</a>
+            <a href="post.php">Make Post</a>
             <div class="info">
                 <a href="#">My Profile</a>
                 <img src="../Images/test.jpg" alt="Avatar">

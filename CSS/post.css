@@ -187,6 +187,7 @@ body {
     /* float: auto; */
     margin-left: 30px;
     width: 92%;
+    resize: none;
     height: 70%;
     overflow: hidden;
     /* margin-right: 30px; */

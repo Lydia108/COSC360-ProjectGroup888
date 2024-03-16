@@ -47,15 +47,15 @@
 
 <body>
     <div class="sidebar">
-        <a href="#"><i class="fa-solid fa-house-chimney">&nbsp;Home</i></a>
+        <a href="main.php"><i class="fa-solid fa-house-chimney">&nbsp;Home</i></a>
         <div class="search-bar">
             <input type="text" placeholder="Search...">
             <i class="fa fa-search"></i>
         </div>
         <div class="actions">
-            <a href="#">Make Post</a>
+            <a href="post.php">Make Post</a>
             <div class="info">
-                <a href="#">My Profile</a>
+                <a href="profile.php">My Profile</a>
                 <img src="../Images/test.jpg" alt="Avatar">
             </div>
         </div>
@@ -70,7 +70,7 @@
         <button>Movie</button>
         <!-- <input class="newTag" placeholder="Add new tag"></input> -->
 
-        
+
 
     </div>
 
@@ -82,6 +82,8 @@
         <p class="datetime">2024-1-1 18:00:00</p>
         <p class="context">sadasdsasdadaddsdandadaadakdakjacacascncsacnanasnccnascsanasnsansasjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjadadsadcascascasssssssssssssssssssadsadsacjsamcasncsanfkafnaskfnsanksakxnaknaknsxknassssssssssssssssssssssssssssssssssssssssssssssss</p>
         <button id="comment"><i class='far fa-comment-alt'></i></button>
+        <!-- <a href="#"><i class='far fa-thumbs-up' id="thumbsup" onclick="toggleLike()"></i></a>
+        <a href="#"><i class='fas fa-thumbs-up' id="thumbsup1" style="display:none;" onclick="toggleLike()"></i></a> -->
 
     </div>
     <div class="separate">
@@ -91,6 +93,22 @@
         <textarea placeholder="Comment something..." id="autoresizing"></textarea>
         <br>
         <button id="submitComment">Comment</button>
+    </div>
+    <div class="separate">
+        <hr>
+    </div>
+    <div class="commentsList">
+        <ul>
+            <li>
+                <img src="../Images/user.jpg">
+                <div class="contents">
+                    <span class="user">User_AAA: </span>
+                    <span class="dateTime"><i>2024-03-15 00:00</i></span>
+
+                    <span class="detail">hhhhhhh</span>
+                </div>
+            </li>
+        </ul>
     </div>
     <!-- <div class="separate">
         <hr>
