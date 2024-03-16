@@ -40,15 +40,15 @@
 
 <body>
     <div class="sidebar">
-        <a href="#"><i class="fa-solid fa-house-chimney">&nbsp;Home</i></a>
+        <a href="main.php"><i class="fa-solid fa-house-chimney">&nbsp;Home</i></a>
         <div class="search-bar">
             <input type="text" placeholder="Search...">
             <i class="fa fa-search"></i>
         </div>
         <div class="actions">
-            <a href="#">Make Post</a>
+            <a href="post.php">Make Post</a>
             <div class="info">
-                <a href="#">My Profile</a>
+                <a href="profile.php">My Profile</a>
                 <img src="../Images/test.jpg" alt="Avatar">
             </div>
         </div>
@@ -56,15 +56,23 @@
 
     <div class="navBar">
         <p>Tags/Categories</p>
-        <button>Sport</button>
-        <button>Makeup</button>
-        <button>Music</button>
-        <button>Food</button>
-        <button>Movie</button>
+        <button>Lifestyle</button>
+        <button>Technology</button>
+        <button>Education</button>
+        <button>Travel</button>
+        <button>Health&Fitness</button>
+        <button>Gastronomy</button>
+        <button>Personal</button>
+        <button>Career</button>
+        <button>Arts&Culture</button>
+
+
+
+
         <!-- <input class="newTag" placeholder="Add new tag"></input> -->
 
-        <input class="newTag" id="newTag" placeholder="Add new tag" style="width: auto; min-width: 120px;" />
-        <span id="textWidthCalculator" style="visibility: hidden; position: absolute;"></span>
+        <!-- <input class="newTag" id="newTag" placeholder="Add new tag" style="width: auto; min-width: 120px;" />
+        <span id="textWidthCalculator" style="visibility: hidden; position: absolute;"></span> -->
 
     </div>
 
@@ -113,7 +121,7 @@
         <br>
         <!-- <img src="../Images/th.jpg" /> -->
 
-        <input class="context" placeholder="Enter text..." />
+        <textarea class="context" placeholder="Enter text..." ></textarea>
         <!-- <img src="../Images/test.jpg" id="default" /> -->
         <button class="photo"><i class="fa-regular fa-image"></i>
         </button>

@@ -82,7 +82,7 @@
             <div class="goToLogin">
                 Don't have an account? <a href="signup.php">Click here</a> to register.
                 <br>
-                <button type="guest">Login as a guest</button>
+                <button type="button" onclick="location.href='main.php'">Login as a guest</button>
             </div>
             <button type="submit" id="guest">Sign in</button>
         </form>

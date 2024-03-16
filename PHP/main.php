@@ -35,9 +35,9 @@
             <i class="fa fa-search"></i>
         </div>
         <div class="actions">
-            <a href="#">Make Post</a>
+            <a href="post.php">Make Post</a>
             <div class="info">
-                <a href="#">My Profile</a>
+                <a href="profile.php">My Profile</a>
                 <img src="../Images/test.jpg" alt="Avatar">
             </div>
         </div>
