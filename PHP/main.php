@@ -10,19 +10,19 @@
     <script src="https://kit.fontawesome.com/d1344ce34d.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/0485a9f289.js" crossorigin="anonymous"></script>
     <script>
-    function toggleLike() {
-        var like = document.getElementById("thumbsup");
-        var like1 = document.getElementById("thumbsup1");
+        function toggleLike() {
+            var like = document.getElementById("thumbsup");
+            var like1 = document.getElementById("thumbsup1");
 
-        // Toggle visibility
-        if (like.style.display === "none") {
-            like.style.display = "inline-block";
-            like1.style.display = "none";
-        } else {
-            like.style.display = "none";
-            like1.style.display = "inline-block";
+            // Toggle visibility
+            if (like.style.display === "none") {
+                like.style.display = "inline-block";
+                like1.style.display = "none";
+            } else {
+                like.style.display = "none";
+                like1.style.display = "inline-block";
+            }
         }
-    }
     </script>
 </head>
 <?php
@@ -30,7 +30,7 @@ session_start();
 
 if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id'];
-    
+
     echo "<div>Welcome, user ID: " . $userId . "</div>";
 } else {
     header("Location: login.php");
@@ -56,15 +56,15 @@ if (isset($_SESSION['user_id'])) {
                 </div>
                 <?php
 
-if (isset($_SESSION['user_id'])) {
-$userId = $_SESSION['user_id'];
+                if (isset($_SESSION['user_id'])) {
+                    $userId = $_SESSION['user_id'];
 
-echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
-} else {
-header("Location: login.php");
-exit();
-}
-?>
+                    echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
+                } else {
+                    header("Location: login.php");
+                    exit();
+                }
+                ?>
             </div>
         </div>
     </div>
@@ -74,15 +74,15 @@ exit();
         <div class="context">
             <?php
 
-if (isset($_SESSION['user_id'])) {
-$userId = $_SESSION['user_id'];
+            if (isset($_SESSION['user_id'])) {
+                $userId = $_SESSION['user_id'];
 
-echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
-} else {
-header("Location: login.php");
-exit();
-}
-?>
+                echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
+            } else {
+                header("Location: login.php");
+                exit();
+            }
+            ?>
         </div>
         <!-- <div class="comment">
             <input type="comment" placeholder="Leave a comment...">
@@ -96,13 +96,18 @@ exit();
             <!-- <p class="count" id="count">123</p> -->
         </div>
     </div>
+
     <div class="navBar">
         <p>Tags/Categories</p>
-        <button>Sport</button>
-        <button>Makeup</button>
-        <button>Music</button>
-        <button>Food</button>
-        <button>Movie</button>
+        <button>Lifestyle</button>
+        <button>Technology</button>
+        <button>Education</button>
+        <button>Travel</button>
+        <button>Health&Fitness</button>
+        <button>Gastronomy</button>
+        <button>Personal</button>
+        <button>Career</button>
+        <button>Arts&Culture</button>
 
     </div>
 
