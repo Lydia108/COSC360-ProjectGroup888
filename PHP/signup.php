@@ -78,7 +78,7 @@
             errorDisplay.className = 'error-message';
             errorDisplay.textContent = message;
             errorDisplay.style.color = 'red';
-            errorDisplay.style.display = 'block'; 
+            errorDisplay.style.display = 'block';
             inputElement.style.borderColor = 'red';
             inputElement.classList.add('error');
             inputElement.closest('.form-group').appendChild(errorDisplay);
@@ -102,14 +102,21 @@
     </script>
 </head>
 <?php
+ob_start(); // Start output buffering at the beginning of the script
+
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    include 'connection.php';
+    include 'connection.php'; // Include your database connection script
+    // Read the content of the default avatar image
+    $defaultAvatarPath = '../Images/profile.jpg'; // Adjust the path as necessary
+    $avatarContent = file_get_contents($defaultAvatarPath);
+    // Sanitize input and assign variables
     $firstName = isset($_POST['firstName']) ? $conn->real_escape_string($_POST['firstName']) : '';
     $lastName = isset($_POST['lastName']) ? $conn->real_escape_string($_POST['lastName']) : '';
     $email = isset($_POST['email']) ? $conn->real_escape_string($_POST['email']) : '';
     $password = isset($_POST['password']) ? $conn->real_escape_string($_POST['password']) : ''; 
 
+    // Validate input lengths and formats
     if (strlen($firstName) > 30 || strlen($lastName) > 30) {
         echo "Name too long.";
         $conn->close();
@@ -121,10 +128,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
     if (strlen($password) < 6 || strlen($password) > 30 || 
-    !preg_match('/[A-Z]/', $password) || // Check for uppercase
-    !preg_match('/[a-z]/', $password) || // Check for lowercase
-    !preg_match('/\d/', $password) ||    // Check for digit
-    !preg_match('/[!@#$%^&*()-=_+{}[\]|:\'",.<>?\/]/', $password)) { 
+        !preg_match('/[A-Z]/', $password) || // Check for uppercase
+        !preg_match('/[a-z]/', $password) || // Check for lowercase
+        !preg_match('/\d/', $password) ||    // Check for digit
+        !preg_match('/[!@#$%^&*()-=_+{}[\]|:\'",.<>?\/]/', $password)) { 
         echo "Invalid password format.";
         $conn->close();
         exit();
@@ -143,20 +150,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Insert new record
-    $sql = "INSERT INTO user (firstName, lastName, emailAddress, password) 
-            VALUES ('$firstName', '$lastName', '$email', '$password')";
+    $sql = "INSERT INTO user (firstName, lastName, emailAddress, password, icon) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('ssssb', $firstName, $lastName, $email, $password, $null);
 
-    if ($conn->query($sql) === TRUE) {
-        echo "New record created successfully";
+    $null = null; // This is needed as a placeholder for the blob data
+    $stmt->send_long_data(4, $avatarContent); 
+    if ($stmt->execute()) {
+        echo "<script>alert('New account created!'); window.location.href='login.php';</script>";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "Error: " . $stmt->error;
     }
+    $stmt->close();
 
-    $conn->close();
+    $conn->close(); // Close database connection
 }
+
+ob_end_flush(); // Send output buffer and turn off output buffering
 ?>
-
-
 
 <body>
     <div class="name">
