@@ -72,7 +72,7 @@ exit();
         <p class="title">blablabla</p>
         <img src="../Images/th.jpg" />
         <div class="context">
-            <p><?php
+            <?php
 
 if (isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
@@ -82,7 +82,7 @@ echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
 header("Location: login.php");
 exit();
 }
-?></p>
+?>
         </div>
         <!-- <div class="comment">
             <input type="comment" placeholder="Leave a comment...">

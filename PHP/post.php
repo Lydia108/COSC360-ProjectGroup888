@@ -29,14 +29,23 @@
     <style>
         .dynamic-button {
             margin-right: 10px;
-            /* Adjust as needed */
             padding: 5px 10px;
-            /* Adjust as needed */
         }
     </style>
 
 </head>
+<?php
+session_start();
 
+if (isset($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
+    
+    echo "<div>Welcome, user ID: " . $userId . "</div>";
+} else {
+    header("Location: login.php");
+    exit();
+}
+?>
 
 <body>
     <div class="sidebar">
@@ -50,10 +59,25 @@
             <div class="info">
                 <a href="profile.php">My Profile</a>
                 <img src="../Images/test.jpg" alt="Avatar">
+                <div class="dropdown-content">
+                    <a href="profile.php">Profile</a>
+                    <a href="logout.php">Logout</a>
+                </div>
+                <?php
+
+if (isset($_SESSION['user_id'])) {
+$userId = $_SESSION['user_id'];
+
+echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
+} else {
+header("Location: login.php");
+exit();
+}
+?> 
             </div>
         </div>
     </div>
-
+    
     <div class="navBar">
         <p>Tags/Categories</p>
         <button>Lifestyle</button>
@@ -65,12 +89,7 @@
         <button>Personal</button>
         <button>Career</button>
         <button>Arts&Culture</button>
-
-
-
-
         <!-- <input class="newTag" placeholder="Add new tag"></input> -->
-
         <!-- <input class="newTag" id="newTag" placeholder="Add new tag" style="width: auto; min-width: 120px;" />
         <span id="textWidthCalculator" style="visibility: hidden; position: absolute;"></span> -->
 

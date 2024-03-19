@@ -8,7 +8,18 @@
     <link rel="stylesheet" href="../CSS/profile.css">
     <script src="https://kit.fontawesome.com/d1344ce34d.js" crossorigin="anonymous"></script>
 </head>
+<?php
+session_start();
 
+if (isset($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
+    
+    echo "<div>Welcome, user ID: " . $userId . "</div>";
+} else {
+    header("Location: login.php");
+    exit();
+}
+?>
 
 <body>
     <div class="sidebar">
@@ -18,6 +29,21 @@
             <div class="info">
                 <a href="#">My Profile</a>
                 <img src="../Images/test.jpg" alt="Avatar">
+                <div class="dropdown-content">
+                    <a href="profile.php">Profile</a>
+                    <a href="logout.php">Logout</a>
+                </div>
+                <?php
+
+if (isset($_SESSION['user_id'])) {
+$userId = $_SESSION['user_id'];
+
+echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
+} else {
+header("Location: login.php");
+exit();
+}
+?> 
             </div>
         </div>
     </div>
@@ -26,7 +52,11 @@
             <img src="../Images/test.jpg">
         </span>
         <span class="profile">
-            <p class="name">Name: </p>
+            <p class="name">
+                First name: 
+
+                Last name:
+            </p>
 
             <p class="address">Address: </p>
 
@@ -34,8 +64,11 @@
             <button>
                 Edit
             </button>
+            <button id="update">
+                Update
+            </button>
         </span>
-        
+
     </div>
     <div class="container2">
         <fieldset>
@@ -53,8 +86,7 @@
 
                 <img src="../Images/test.jpg">
                 <p class="title">hello!</p>
-                <img src="../Images/test.jpg">
-                <p class="title">hello!</p>
+                
 
             </div>
         </fieldset>

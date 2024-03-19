@@ -39,6 +39,7 @@ body {
 .sidebar .info {
     display: flex;
     align-items: center;
+    position: relative;
 }
 
 .sidebar .info a {
@@ -51,13 +52,24 @@ body {
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
-    margin-right: 30px;
+    margin-right: 10px;
+    transition: filter 0.3s ease; 
+}
+.info img:hover {
+    cursor: pointer;
+    filter: brightness(75%); 
+
 }
 
-
+.ses {
+    margin-right: 30px;
+    font-weight: bold;
+}
 .sidebar .actions {
     display: flex;
     align-items: center;
+    justify-content: start;
+
 }
 
 .sidebar .actions a {
@@ -102,11 +114,11 @@ body {
     white-space: pre;
 }
 .container1 span{
-    margin-left: 50px;
+    margin-left: 70px;
 }
 .container1 span.profile{
     margin-top: auto;
-    margin-left: 80px;
+    margin-left: 100px;
     color:rgba(131, 78, 4);
     font-size: 18px;
     font-weight: bold;
@@ -124,6 +136,7 @@ body {
     cursor: pointer;
 
 }
+
 .container1 span button:hover{
     text-decoration: underline;
     background-color: #f2bf17;
@@ -193,3 +206,41 @@ margin-bottom: 20px;
 /* .container2 button{
     color:white;
 } */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 150px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    text-align: center;
+    margin-top: 144px;
+    margin-left: 70px;
+    border-radius: 10px;
+    /* width: 100%;  */
+
+    /* top: 60px; 
+    left: 0;  */
+}
+.info:hover .dropdown-content {
+    display: block;
+
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    justify-content: center;
+    display: block;
+    width: 78%; 
+
+}
+#update{
+    margin-left: 50px;
+}
