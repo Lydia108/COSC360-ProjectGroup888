@@ -18,26 +18,12 @@
                 e.preventDefault();
                 errorMessage.textContent += "Invalid email format, e.g., user@example.com\n";
             }
-            if (pass.length < 6 || pass.length > 30 || !isValidPassword(pass)) {
-                e.preventDefault();
-                pass.value = "";
-                errorMessage.textContent +=
-                    "Password must be between 6 and 30 characters and include uppercase, lowercase letters, numbers, and symbols.\n";
-            }
         });
 
         function isValidEmail(email) {
             const atPosition = email.indexOf("@");
             const dotPosition = email.lastIndexOf(".");
             return !(atPosition < 1 || dotPosition < atPosition + 2 || dotPosition + 2 >= email.length);
-        }
-
-        function isValidPassword(password) {
-            const hasLowerCase = /[a-z]/.test(password);
-            const hasUpperCase = /[A-Z]/.test(password);
-            const hasNumber = /\d/.test(password);
-            const hasSymbol = /[!@#$%^&*()-=_+{}[\]|;:'",.<>?/]/.test(password);
-            return hasLowerCase && hasUpperCase && hasNumber && hasSymbol;
         }
 
         function togglePasswordVisibility() {
@@ -60,41 +46,39 @@
 
 <?php
 session_start();
+
 include "connection.php";
-if (isset($_SESSION['error_message'])) {
-    echo "<p style='color:red'>" . $_SESSION['error_message'] . "</p>";
-    unset($_SESSION['error_message']); // Clear the message after displaying it
+
+if (isset($_SESSION['user_id'])) {
+    header("Location: main.php");
+    exit();
 }
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST["email"]) && isset($_POST["password"])) {
-        $email = $_POST["email"];
-        $password = $_POST["password"];
-        $sql = "SELECT * FROM user";
-        $results = mysqli_query($conn, $sql);
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+    $sql = "SELECT * FROM user WHERE emailAddress = '$email' AND password = '$password'";
+    $results = mysqli_query($conn, $sql);
 
-        $loginValid = false;
-        while ($row = mysqli_fetch_assoc($results)) {
-            if ($email == $row['emailAddress'] && $password == $row['password']) {
-                $_SESSION['user_id'] = $row['userId'];
-                $loginValid = true;
-                break;
-            }
-        }
-
-        if ($loginValid) {
-            header("Location: main.php");
-            exit();
-        } else {
-            $_SESSION['error_message'] = "Invalid username or password.";
-            header("Location: login.php");
-            exit();
-        }
+    if (mysqli_num_rows($results) > 0) {
+        $row = mysqli_fetch_assoc($results);
+        $_SESSION['user_id'] = $row['userId'];
+        $_SESSION['logged_in'] = true; 
+        header("Location: main.php");
+        exit();
+    } else {
+        $_SESSION['error_message'] = "Invalid email or password.";
+        header("Location: login.php");
+        exit();
     }
 }
+
+if (isset($_SESSION['error_message'])) {
+    $error_message = $_SESSION['error_message'];
+    echo "<script type='text/javascript'>window.onload = function() { alert('$error_message'); }</script>";
+    unset($_SESSION['error_message']);
+}
 ?>
-
-
-
 
 <body>
     <div class="name">

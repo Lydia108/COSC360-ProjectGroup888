@@ -50,17 +50,21 @@ if (isset($_SESSION['user_id'])) {
             <div class="info">
                 <a href="profile.php">My Profile</a>
                 <img src="../Images/test.jpg" alt="Avatar">
+                <div class="dropdown-content">
+                    <a href="profile.php">Profile</a>
+                    <a href="logout.php">Logout</a>
+                </div>
                 <?php
 
-                if (isset($_SESSION['user_id'])) {
-                $userId = $_SESSION['user_id'];
+if (isset($_SESSION['user_id'])) {
+$userId = $_SESSION['user_id'];
 
-                echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
-                } else {
-                header("Location: login.php");
-                exit();
-                }
-                ?>
+echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
+} else {
+header("Location: login.php");
+exit();
+}
+?>
             </div>
         </div>
     </div>

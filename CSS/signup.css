@@ -55,8 +55,7 @@ label {
 }
 
 input[type=text],
-input[type=email],
-input[type=password] {
+input[type=email] {
     width: 100%;
     padding: 10px;
     margin: 5px 0 18px 0;
@@ -66,7 +65,15 @@ input[type=password] {
     border-radius: 10px;
     
 }
-
+input[type=password]{
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 10px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
 .avatar img{
     border-radius: 50%;
     width: 80px;

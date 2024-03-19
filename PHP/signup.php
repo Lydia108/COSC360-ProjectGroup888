@@ -78,12 +78,12 @@
             errorDisplay.className = 'error-message';
             errorDisplay.textContent = message;
             errorDisplay.style.color = 'red';
-            errorDisplay.style.display = 'block'; //
-            inputElement.style.borderColor = 'red'
-            inputElement.classList.add(
-                'error');
-            inputElement.after(errorDisplay);
+            errorDisplay.style.display = 'block'; 
+            inputElement.style.borderColor = 'red';
+            inputElement.classList.add('error');
+            inputElement.closest('.form-group').appendChild(errorDisplay);
         }
+
 
         function togglePasswordVisibility() {
             var passwordInput = document.getElementById("password");
