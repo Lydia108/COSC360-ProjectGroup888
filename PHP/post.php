@@ -184,8 +184,7 @@ if (isset($_SESSION['user_id'])) {
         <!-- <img src="../Images/th.jpg" /> -->
 
         <!-- <div class="textarea-container"> -->
-            <textarea class="context" placeholder="Enter text...">
-            </textarea>
+            <textarea class="context" placeholder="Enter text..."></textarea>
             <img id="imagePreview"
                 alt="Image preview" />
         <!-- </div> -->
