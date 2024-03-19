@@ -10,27 +10,70 @@
     <script src='https://www.w3schools.cn/fonts/kit/a076d05399.js'></script>
     <script src="https://kit.fontawesome.com/d1344ce34d.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/0485a9f289.js" crossorigin="anonymous"></script>
-    <script>
-        function toggleLike() {
-            var like = document.getElementById("thumbsup");
-            var like1 = document.getElementById("thumbsup1");
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-            // Toggle visibility
-            if (like.style.display === "none") {
-                like.style.display = "inline-block";
-                like1.style.display = "none";
-            } else {
-                like.style.display = "none";
-                like1.style.display = "inline-block";
+
+
+    <script>
+    document.getElementById('imageUpload').addEventListener('change', function(event) {
+        var file = event.target.files[0];
+        if (file) {
+            // Use FileReader to read the selected file
+            var reader = new FileReader();
+
+            // Once the file is read, set the src of the imagePreview to the file's content
+            reader.onload = function(e) {
+                $('#imagePreview').attr('src', e.target.result).show(); // Show the preview
             }
+
+            reader.readAsDataURL(file); // Read the file as a Data URL (base64)
         }
+    });
+    </script>
+
+
+    <script>
+    $(document).ready(function() {
+        $('#imageUpload').change(function(event) {
+            var file = event.target.files[0];
+            if (file) {
+                // Use FileReader to read the selected file
+                var reader = new FileReader();
+
+                // Once the file is read, set the src of the imagePreview to the file's content
+                reader.onload = function(e) {
+                    $('#imagePreview').attr('src', e.target.result).show(); // Show the preview
+                }
+
+                reader.readAsDataURL(file); // Read the file as a Data URL (base64)
+            }
+        });
+    });
+    </script>
+
+
+
+    <script>
+    function toggleLike() {
+        var like = document.getElementById("thumbsup");
+        var like1 = document.getElementById("thumbsup1");
+
+        // Toggle visibility
+        if (like.style.display === "none") {
+            like.style.display = "inline-block";
+            like1.style.display = "none";
+        } else {
+            like.style.display = "none";
+            like1.style.display = "inline-block";
+        }
+    }
     </script>
 
     <style>
-        .dynamic-button {
-            margin-right: 10px;
-            padding: 5px 10px;
-        }
+    .dynamic-button {
+        margin-right: 10px;
+        padding: 5px 10px;
+    }
     </style>
 
 </head>
@@ -39,7 +82,7 @@ session_start();
 
 if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id'];
-    
+
     echo "<div>Welcome, user ID: " . $userId . "</div>";
 } else {
     header("Location: login.php");
@@ -65,19 +108,19 @@ if (isset($_SESSION['user_id'])) {
                 </div>
                 <?php
 
-if (isset($_SESSION['user_id'])) {
-$userId = $_SESSION['user_id'];
+                if (isset($_SESSION['user_id'])) {
+                    $userId = $_SESSION['user_id'];
 
-echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
-} else {
-header("Location: login.php");
-exit();
-}
-?> 
+                    echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
+                } else {
+                    header("Location: login.php");
+                    exit();
+                }
+                ?>
             </div>
         </div>
     </div>
-    
+
     <div class="navBar">
         <p>Tags/Categories</p>
         <button>Lifestyle</button>
@@ -94,7 +137,7 @@ exit();
         <span id="textWidthCalculator" style="visibility: hidden; position: absolute;"></span> -->
 
     </div>
-
+    <!-- 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const newTagInput = document.getElementById('newTag');
@@ -133,17 +176,27 @@ exit();
                 }
             });
         });
-    </script>
+    </script> -->
 
     <div class="post">
         <input class="title" placeholder="Edit title..." />
         <br>
         <!-- <img src="../Images/th.jpg" /> -->
 
-        <textarea class="context" placeholder="Enter text..." ></textarea>
-        <!-- <img src="../Images/test.jpg" id="default" /> -->
-        <button class="photo"><i class="fa-regular fa-image"></i>
+        <!-- <div class="textarea-container"> -->
+            <textarea class="context" placeholder="Enter text...">
+            </textarea>
+            <img id="imagePreview"
+                alt="Image preview" />
+        <!-- </div> -->
+
+        <input type="file" id="imageUpload" accept="image/*" style="display: none;" />
+        <button class="photo" onclick="document.getElementById('imageUpload').click();">
+            <i class="fa-regular fa-image" id="symbol"></i>
         </button>
+        <!-- <img id="imagePreview" style="display: none; width: 100px; height: 100px;" alt="Image preview" /> -->
+
+
         <button class="submit">Post now</button>
         <!-- <div class="comment">
             <input type="comment" placeholder="Leave a comment...">
