@@ -10,11 +10,24 @@
 </head>
 <?php
 session_start();
+include 'connection.php'; // Make sure this path is correct
 
 if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id'];
+    $stmt = $conn->prepare("SELECT firstName, lastName, emailAddress, icon FROM user WHERE userId = ?");
+    $stmt->bind_param("i", $userId); // 'i' indicates the type is integer
+    $stmt->execute();
+    $result = $stmt->get_result();
     
-    echo "<div>Welcome, user ID: " . $userId . "</div>";
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        $firstName = htmlspecialchars($user['firstName']);
+        $lastName = htmlspecialchars($user['lastName']);
+        // echo 'Icon data length: ' . strlen((string)$user['firstName']) . ' bytes</p>';
+    } else {
+        echo "No user found.";
+    }
+    $stmt->close();
 } else {
     header("Location: login.php");
     exit();
@@ -38,29 +51,28 @@ if (isset($_SESSION['user_id'])) {
 if (isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 
-echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
+echo "<div class='ses'>Welcome, " . $firstName . " " . $lastName . "</div>";
 } else {
 header("Location: login.php");
 exit();
 }
-?> 
+?>
             </div>
         </div>
     </div>
     <div class="container1">
         <span>
-            <img src="../Images/test.jpg">
+            <img src="../Images/test.jpg" alt="Avatar">
         </span>
         <span class="profile">
             <p class="name">
-                First name: 
-
-                Last name:
+                First name: <?php echo htmlspecialchars($user['firstName']); ?>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </p>
+            <p class="email">Email: <?php echo htmlspecialchars($user['emailAddress']); ?></p>
 
-            <p class="address">Address: </p>
-
-            <p class="number">Phone number: </p>
+            <p class="number"> Last name: <?php echo htmlspecialchars($user['lastName']); ?>
+            </p>
             <button>
                 Edit
             </button>
@@ -86,7 +98,7 @@ exit();
 
                 <img src="../Images/test.jpg">
                 <p class="title">hello!</p>
-                
+
 
             </div>
         </fieldset>
