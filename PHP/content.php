@@ -63,15 +63,15 @@
 
     <div class="navBar">
         <p>Tags/Categories</p>
-        <button>Sport</button>
-        <button>Makeup</button>
-        <button>Music</button>
-        <button>Food</button>
-        <button>Movie</button>
-        <!-- <input class="newTag" placeholder="Add new tag"></input> -->
-
-
-
+        <button>Lifestyle</button>
+        <button>Technology</button>
+        <button>Education</button>
+        <button>Travel</button>
+        <button>Health&Fitness</button>
+        <button>Gastronomy</button>
+        <button>Personal</button>
+        <button>Career</button>
+        <button>Arts&Culture</button>
     </div>
 
     <div class="content">
