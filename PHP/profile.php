@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../CSS/profile.css">
     <script src="https://kit.fontawesome.com/d1344ce34d.js" crossorigin="anonymous"></script>
+
 </head>
 <?php
 session_start();
@@ -23,8 +24,11 @@ if (isset($_SESSION['user_id'])) {
         $user = $result->fetch_assoc();
         $firstName = htmlspecialchars($user['firstName']);
         $lastName = htmlspecialchars($user['lastName']);
-        // echo 'Icon data length: ' . strlen((string)$user['firstName']) . ' bytes</p>';
-    } else {
+        if ($user['icon']) {
+            $iconData = base64_encode($user['icon']);
+        } else {
+            $iconData = ''; 
+        }    } else {
         echo "No user found.";
     }
     $stmt->close();
@@ -41,13 +45,13 @@ if (isset($_SESSION['user_id'])) {
             <a href="post.php">Make Post</a>
             <div class="info">
                 <a href="#">My Profile</a>
-                <img src="../Images/test.jpg" alt="Avatar">
+                <img src="<?php echo $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
+                    id="sidebarAvatar" />
                 <div class="dropdown-content">
                     <a href="profile.php">Profile</a>
                     <a href="logout.php">Logout</a>
                 </div>
                 <?php
-
 if (isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 
@@ -62,25 +66,71 @@ exit();
     </div>
     <div class="container1">
         <span>
-            <img src="../Images/test.jpg" alt="Avatar">
+            <a href="#"><img
+                    src="<?php echo $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
+                    title="Change Avatar" id="avatarImage" />
+            </a>
+            <input type="file" id="fileInput" name="avatar" style="display: none;" />
         </span>
+        <script>
+        document.getElementById('avatarImage').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('avatarImage').src = e.target.result;
+                    document.getElementById('sidebarAvatar').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                let formData = new FormData();
+                formData.append('avatar', file);
+
+                fetch('uploadAvatar.php', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log('Picture uploaded and saved in the database succesfully!');
+                        } else {
+                            console.error('Failed to upload picture!');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+        });
+        </script>
         <span class="profile">
-            <p class="name">
-                First name: <?php echo htmlspecialchars($user['firstName']); ?>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </p>
-            <p class="email">Email: <?php echo htmlspecialchars($user['emailAddress']); ?></p>
-
-            <p class="number"> Last name: <?php echo htmlspecialchars($user['lastName']); ?>
-            </p>
-            <button>
-                Edit
-            </button>
-            <button id="update">
-                Update
-            </button>
+            <div id="userInfo">
+                <p class="name">First name: <span
+                        id="displayFirstName"><?php echo htmlspecialchars($user['firstName']); ?></span>
+                    <input type="text" id="editFirstName" value="<?php echo htmlspecialchars($user['firstName']); ?>"
+                        required maxlength="30" style="display:none;">
+                </p>
+                <p class="number">Last name: <span
+                        id="displayLastName"><?php echo htmlspecialchars($user['lastName']); ?></span>
+                    <input type="text" id="editLastName" value="<?php echo htmlspecialchars($user['lastName']); ?>"
+                        required maxlength="30" style="display:none;">
+                </p>
+                <p class="email">&nbsp;&nbsp;Email: <span
+                        id="displayEmail"><?php echo htmlspecialchars($user['emailAddress']); ?></span>
+                    <input type="email" id="editEmail" value="<?php echo htmlspecialchars($user['emailAddress']); ?>"
+                        required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" style="display:none;">
+                </p>
+            </div>
+            <div class="button-container">
+                <button id="editButton">Edit</button>
+                <button id="updateButton" style="display: none;">Submit</button>
+            </div>
         </span>
-
     </div>
     <div class="container2">
         <fieldset>
@@ -103,10 +153,78 @@ exit();
             </div>
         </fieldset>
     </div>
+    <script>
+    let isEditing = false;
+    document.getElementById('editButton').addEventListener('click', function() {
+        isEditing = !isEditing;
+        if (isEditing) {
+            document.getElementById('editFirstName').style.display = 'inline';
+            document.getElementById('editLastName').style.display = 'inline';
+            document.getElementById('editEmail').style.display = 'inline';
+            document.getElementById('displayFirstName').style.display = 'none';
+            document.getElementById('displayLastName').style.display = 'none';
+            document.getElementById('displayEmail').style.display = 'none';
+            document.getElementById('updateButton').style.display = 'inline-block';
+            this.textContent = 'Cancel';
+        } else {
+            document.getElementById('editFirstName').style.display = 'none';
+            document.getElementById('editLastName').style.display = 'none';
+            document.getElementById('editEmail').style.display = 'none';
+            document.getElementById('displayFirstName').style.display = 'inline';
+            document.getElementById('displayLastName').style.display = 'inline';
+            document.getElementById('displayEmail').style.display = 'inline';
+            document.getElementById('updateButton').style.display = 'none';
+            this.textContent = 'Edit';
+        }
+    });
 
+    document.getElementById('updateButton').addEventListener('click', function(event) {
+        const firstName = document.getElementById('editFirstName').value;
+        const lastName = document.getElementById('editLastName').value;
+        const email = document.getElementById('editEmail').value;
+        const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (firstName.trim().length === 0 || firstName.length > 30 || lastName.trim().length === 0 || lastName
+            .length > 30) {
+            alert("First name and last name cannot be empty and must not exceed 30 characters.");
+            event.preventDefault();
+            return false;
+        }
+
+        if (!emailPattern.test(email)) {
+            alert("Please enter a valid email address.");
+            event.preventDefault();
+            return false;
+        }
+
+        const formData = new FormData();
+        formData.append('firstName', firstName);
+        formData.append('lastName', lastName);
+        formData.append('email', email);
+        formData.append('userId', <?php echo $userId; ?>);
+
+        fetch('updateProfile.php', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Profile updated successfully!');
+                    document.getElementById('editButton').textContent = 'Edit';
+                    isEditing = false;
+                    alert("Profile updated successfully!");
+                } else {
+                    console.error('Failed to update profile.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+    </script>
 </body>
 
-
-
+</body>
 
 </html>

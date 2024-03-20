@@ -4,7 +4,7 @@
 $servername = "localhost";
 $database = "blog";
 $user = "root";
-$password = "123456";
+$password = "root123";
  
 $conn = new mysqli($servername, $user, $password, $database);
 if ($conn->connect_error) {

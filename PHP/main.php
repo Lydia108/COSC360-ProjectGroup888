@@ -10,28 +10,40 @@
     <script src="https://kit.fontawesome.com/d1344ce34d.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/0485a9f289.js" crossorigin="anonymous"></script>
     <script>
-        function toggleLike() {
-            var like = document.getElementById("thumbsup");
-            var like1 = document.getElementById("thumbsup1");
+    function toggleLike() {
+        var like = document.getElementById("thumbsup");
+        var like1 = document.getElementById("thumbsup1");
 
-            // Toggle visibility
-            if (like.style.display === "none") {
-                like.style.display = "inline-block";
-                like1.style.display = "none";
-            } else {
-                like.style.display = "none";
-                like1.style.display = "inline-block";
-            }
+        // Toggle visibility
+        if (like.style.display === "none") {
+            like.style.display = "inline-block";
+            like1.style.display = "none";
+        } else {
+            like.style.display = "none";
+            like1.style.display = "inline-block";
         }
+    }
     </script>
 </head>
 <?php
 session_start();
-
+include 'connection.php'; // Make sure this path is correct
 if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id'];
-
-    echo "<div>Welcome, user ID: " . $userId . "</div>";
+    $stmt = $conn->prepare("SELECT firstName, lastName, emailAddress, icon FROM user WHERE userId = ?");
+    $stmt->bind_param("i", $userId); // 'i' indicates the type is integer
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        $firstName = htmlspecialchars($user['firstName']);
+        $lastName = htmlspecialchars($user['lastName']);
+        // echo 'Icon data length: ' . strlen((string)$user['firstName']) . ' bytes</p>';
+    } else {
+        echo "No user found.";
+    }
+    $stmt->close();
 } else {
     header("Location: login.php");
     exit();
@@ -55,16 +67,15 @@ if (isset($_SESSION['user_id'])) {
                     <a href="logout.php">Logout</a>
                 </div>
                 <?php
+if (isset($_SESSION['user_id'])) {
+$userId = $_SESSION['user_id'];
 
-                if (isset($_SESSION['user_id'])) {
-                    $userId = $_SESSION['user_id'];
-
-                    echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
-                } else {
-                    header("Location: login.php");
-                    exit();
-                }
-                ?>
+echo "<div class='ses'>Welcome, " . $firstName . " " . $lastName . "</div>";
+} else {
+header("Location: login.php");
+exit();
+}
+?>
             </div>
         </div>
     </div>
@@ -73,16 +84,15 @@ if (isset($_SESSION['user_id'])) {
         <img src="../Images/th.jpg" />
         <div class="context">
             <?php
+if (isset($_SESSION['user_id'])) {
+$userId = $_SESSION['user_id'];
 
-            if (isset($_SESSION['user_id'])) {
-                $userId = $_SESSION['user_id'];
-
-                echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
-            } else {
-                header("Location: login.php");
-                exit();
-            }
-            ?>
+echo "<div class='ses'>Welcome, " . $firstName . " " . $lastName . "</div>";
+} else {
+header("Location: login.php");
+exit();
+}
+?>
         </div>
         <!-- <div class="comment">
             <input type="comment" placeholder="Leave a comment...">
