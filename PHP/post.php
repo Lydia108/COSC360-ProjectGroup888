@@ -16,49 +16,46 @@
 
     <script>
     document.getElementById('imageUpload').addEventListener('change', function(event) {
-        var file = event.target.files[0];
-        if (file) {
-            // Use FileReader to read the selected file
-            var reader = new FileReader();
+        const files = event.target.files;
+        const previewContainer = document.getElementById('previewContainer');
 
-            // Once the file is read, set the src of the imagePreview to the file's content
-            reader.onload = function(e) {
-                $('#imagePreview').attr('src', e.target.result).show(); // Show the preview
-            }
-
-            reader.readAsDataURL(file); // Read the file as a Data URL (base64)
+        // Check if adding the new files exceeds the limit of 5 images
+        if ((previewContainer.children.length + files.length) > 5) {
+            alert('You can select up to 5 images in total.');
+            return;
         }
+        Array.from(files).forEach(file => {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.createElement('img');
+                img.setAttribute('src', e.target.result);
+                img.className = 'preview-img';
+                previewContainer.appendChild(img); // Append each new image
+            };
+            reader.readAsDataURL(file);
+        });
     });
     </script>
-
-
     <script>
     $(document).ready(function() {
         $('#imageUpload').change(function(event) {
             var file = event.target.files[0];
             if (file) {
-                // Use FileReader to read the selected file
                 var reader = new FileReader();
-
-                // Once the file is read, set the src of the imagePreview to the file's content
                 reader.onload = function(e) {
-                    $('#imagePreview').attr('src', e.target.result).show(); // Show the preview
+                    $('#imagePreview').attr('src', e.target.result).show();
                 }
 
-                reader.readAsDataURL(file); // Read the file as a Data URL (base64)
+                reader.readAsDataURL(file);
             }
         });
     });
     </script>
-
-
-
     <script>
     function toggleLike() {
         var like = document.getElementById("thumbsup");
         var like1 = document.getElementById("thumbsup1");
 
-        // Toggle visibility
         if (like.style.display === "none") {
             like.style.display = "inline-block";
             like1.style.display = "none";
@@ -69,21 +66,31 @@
     }
     </script>
 
-    <style>
-    .dynamic-button {
-        margin-right: 10px;
-        padding: 5px 10px;
-    }
-    </style>
 
 </head>
 <?php
 session_start();
+include 'connection.php'; // Make sure this path is correct
 
 if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id'];
-
-    echo "<div>Welcome, user ID: " . $userId . "</div>";
+    $stmt = $conn->prepare("SELECT firstName, lastName, emailAddress, icon FROM user WHERE userId = ?");
+    $stmt->bind_param("i", $userId); // 'i' indicates the type is integer
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        $firstName = htmlspecialchars($user['firstName']);
+        $lastName = htmlspecialchars($user['lastName']);
+        if ($user['icon']) {
+            $iconData = base64_encode($user['icon']);
+        } else {
+            $iconData = ''; 
+        }    } else {
+        echo "No user found.";
+    }
+    $stmt->close();
 } else {
     header("Location: login.php");
     exit();
@@ -107,16 +114,15 @@ if (isset($_SESSION['user_id'])) {
                     <a href="logout.php">Logout</a>
                 </div>
                 <?php
+if (isset($_SESSION['user_id'])) {
+$userId = $_SESSION['user_id'];
 
-                if (isset($_SESSION['user_id'])) {
-                    $userId = $_SESSION['user_id'];
-
-                    echo "<div class='ses'>Welcome, user ID: " . $userId . "</div>";
-                } else {
-                    header("Location: login.php");
-                    exit();
-                }
-                ?>
+echo "<div class='ses'>Welcome, " . $firstName . " " . $lastName . "</div>";
+} else {
+header("Location: login.php");
+exit();
+}
+?>
             </div>
         </div>
     </div>
@@ -132,81 +138,37 @@ if (isset($_SESSION['user_id'])) {
         <button>Personal</button>
         <button>Career</button>
         <button>Arts&Culture</button>
-        <!-- <input class="newTag" placeholder="Add new tag"></input> -->
-        <!-- <input class="newTag" id="newTag" placeholder="Add new tag" style="width: auto; min-width: 120px;" />
-        <span id="textWidthCalculator" style="visibility: hidden; position: absolute;"></span> -->
 
     </div>
-    <!-- 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const newTagInput = document.getElementById('newTag');
-            const calculatorSpan = document.getElementById('textWidthCalculator');
-            const navBar = document.querySelector('.navBar');
-
-            // Adjust newTag input width based on its content
-            function adjustInputWidth() {
-                calculatorSpan.textContent = newTagInput.value || newTagInput.placeholder;
-                newTagInput.style.width = `${calculatorSpan.offsetWidth + 10}px`; // +10 for padding
-            }
-
-            newTagInput.addEventListener('input', adjustInputWidth);
-
-            // Initially adjust input width
-            adjustInputWidth();
-
-            // Function to add a new tag button
-            function addNewTag(tagText) {
-                const newButton = document.createElement('button');
-                newButton.textContent = tagText;
-                newButton.className = 'dynamic-button'; // Use this class to style your buttons
-                // Insert the new button before the newTag input box
-                navBar.insertBefore(newButton, newTagInput);
-            }
-
-            // Listen for Enter key in newTag input
-            newTagInput.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault(); // Prevent form submission if any
-                    if (newTagInput.value.trim() !== '') {
-                        addNewTag(newTagInput.value.trim());
-                        newTagInput.value = ''; // Clear input
-                        adjustInputWidth(); // Reset input width
-                    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const navBarButtons = document.querySelectorAll('.navBar button');
+        const textarea = document.querySelector('.context');
+        navBarButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const currentText = textarea.value;
+                if (currentText.includes('#')) {
+                    alert('You can only add one tag.');
+                } else {
+                    const tagText = `#${this.textContent}# `;
+                    textarea.value = `${currentText} ${tagText}`;
                 }
             });
         });
-    </script> -->
-
+    });
+    </script>
     <div class="post">
         <input class="title" placeholder="Edit title..." />
         <br>
-        <!-- <img src="../Images/th.jpg" /> -->
+        <textarea class="context" placeholder="Enter text..."></textarea>
+        <img id="imagePreview" alt="Image preview" />
 
-        <!-- <div class="textarea-container"> -->
-            <textarea class="context" placeholder="Enter text..."></textarea>
-            <img id="imagePreview"
-                alt="Image preview" />
-        <!-- </div> -->
-
-        <input type="file" id="imageUpload" accept="image/*" style="display: none;" />
         <button class="photo" onclick="document.getElementById('imageUpload').click();">
             <i class="fa-regular fa-image" id="symbol"></i>
         </button>
-        <!-- <img id="imagePreview" style="display: none; width: 100px; height: 100px;" alt="Image preview" /> -->
-
-
+        <input type="file" id="imageUpload" accept="image/*" multiple style="display: none;" />
         <button class="submit">Post now</button>
-        <!-- <div class="comment">
-            <input type="comment" placeholder="Leave a comment...">
-            <a href="#"><i class="fa-solid fa-envelope"></i></a>
-        </div> -->
-
     </div>
-
-
-
-
     <div class="site-footer">
         <footer class="app">Bloggie</footer>
         <footer class="intro">The simplest way to connect with others through questions and answers.</footer>
@@ -220,7 +182,39 @@ if (isset($_SESSION['user_id'])) {
         <footer class="copyright">&copy; 2024 Bloggie. All rights reserved.</footer>
 
     </div>
+    <script>
+    $(document).ready(function() {
+        $('.submit').click(function(event) {
+            event.preventDefault(); 
 
+            let postTitle = $('.title').val();
+            let postContent = $('.context').val();
+            let formData = new FormData();
+            formData.append('postTitle', postTitle);
+            formData.append('postContent', postContent);
+            let files = $('#imageUpload')[0].files;
+            for (let i = 0; i < files.length; i++) {
+                formData.append('images[]', files[i]);
+            }
+            // AJAX 
+            $.ajax({
+                url: 'uploadPost.php',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    alert('Post submitted successfully.');
+                    window.location.href = 'main.php';
+                },
+                error: function() {
+                    alert('Error submitting the post.');
+                }
+            });
+        });
+
+    });
+    </script>
 
 </body>
 

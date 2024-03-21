@@ -58,7 +58,6 @@ body {
 .info img:hover {
     cursor: pointer;
     filter: brightness(75%); 
-
 }
 
 .ses {

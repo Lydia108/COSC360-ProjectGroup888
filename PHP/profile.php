@@ -28,7 +28,8 @@ if (isset($_SESSION['user_id'])) {
             $iconData = base64_encode($user['icon']);
         } else {
             $iconData = ''; 
-        }    } else {
+        }    
+    } else {
         echo "No user found.";
     }
     $stmt->close();
