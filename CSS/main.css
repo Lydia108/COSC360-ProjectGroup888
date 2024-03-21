@@ -34,7 +34,7 @@ body {
     padding: 0 20px;
     position: fixed;
     top: 0;
-    /* z-index: 1000; */
+    z-index: 1000;
     box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -91,7 +91,7 @@ body {
     text-decoration: none;
     justify-content: center;
     display: block;
-    width: 78%; 
+    width: 78%;
 
 }
 
@@ -106,16 +106,12 @@ body {
     border-radius: 50%;
     object-fit: cover;
     margin-right: 10px;
-    transition: filter 0.3s ease; 
+    transition: filter 0.3s ease;
 
     /* cursor: pointer; */
 }
 
-.info img:hover {
-    cursor: pointer;
-    filter: brightness(75%); 
 
-}
 
 
 .sidebar .actions {
@@ -183,6 +179,7 @@ body {
 
 .post {
     float: left;
+    position: relative;
     margin-top: 100px;
     margin-left: 50px;
     margin-right: 50px;
@@ -190,12 +187,21 @@ body {
     min-height: 600px;
     border-radius: 20px;
     background-color: rgba(255, 253, 253, 0.5);
+    cursor: pointer;
+}
+
+
+.post:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transform: scale(1.02);
+    filter: brightness(107%);
+    transition: filter 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .post img {
     margin-left: 30px;
     margin-top: 2px;
-    width: 50%;
+    width: 35%;
     height: 73%;
     border-radius: 10px;
     border: 1px solid black;
@@ -210,18 +216,20 @@ body {
 }
 
 .post .context {
+    position: relative;
     background-color: #f3cd4f;
     border-radius: 10px;
     float: right;
-    width: 40%;
+    width: 47%;
     height: 70%;
     overflow: hidden;
     margin-right: 30px;
     padding: 10px 20px;
-
-
-
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    font-size: 20px;
 }
+
 
 .post .context p {
     /* width: 90%; */
@@ -264,62 +272,51 @@ body {
 
 .user img {
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: 50px;
+    height: 50px;
     object-fit: cover;
-    margin-top: 5px;
+    margin-top: 10px;
     /* display: inline-block; */
 }
 
-.user #test,
-#username,
-#count {
-    display: inline-block;
-    /* Makes elements line up horizontally */
-    vertical-align: middle;
-    margin-right: 5px;
-}
-
-.user .username {
-    margin: 0;
-    /* Removes default margin/padding from <p> to prevent unwanted space */
-
-}
 
 .user #thumbsup {
     display: inline-block;
-    /* Makes elements line up horizontally */
+    align-items: center;
     vertical-align: middle;
-    margin-left: 78%;
+    margin-left: 76%;
     margin-right: 5px;
-    font-size: 22px;
+    font-size: 25px;
+    margin-bottom: 60px;
     color: black;
 }
 
 .user #thumbsup1 {
     display: inline-block;
+    align-items: center;
     vertical-align: middle;
-    margin-left: 78%;
+    margin-left: 76%;
     margin-right: 5px;
-    font-size: 22px;
+    font-size: 25px;
+    margin-bottom: 60px;
     color: black;
-
 }
 
-.user #thumbsup:hover {
-    text-decoration: underline;
-}
-
-.user #thumbsup1:hover {
-    text-decoration: underline;
-}
-
-.user #count {
+.user .username {
+    font-weight: bold;
+    font-size: 20px;
     display: inline-block;
     vertical-align: middle;
-    margin-left: 90%;
+    margin-left: 10px;
+    /* margin-top: 10px; */
     margin-right: 5px;
-    font-size: 22px;
+    margin-bottom: 60px;
+
+}
+
+
+.user a:hover i {
+    text-decoration: underline;
 }
 
 .site-footer {
@@ -344,11 +341,7 @@ body {
     margin-top: 10px;
     margin-left: 10px;
 }
-
-/* .post input.title{
-    margin-left: 30px;
-    border-radius: 20px;
-    width: 50%;
-    margin-bottom: 10px;
-    padding: 10px 5px;
-} */
+.info img:hover {
+    cursor: pointer;
+    filter: brightness(75%); 
+}

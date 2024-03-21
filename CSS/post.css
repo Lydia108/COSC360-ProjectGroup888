@@ -127,6 +127,13 @@ body {
     padding: 10px 10px;
     font-weight: bold;
 }
+.navBar button:hover{
+    cursor: pointer;
+    text-decoration: underline;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    filter: brightness(80%);
+
+}
 
 .site-footer {
     margin-top: 100px;
@@ -201,14 +208,6 @@ body {
 }
 
 
-/* .post img#default{
-    margin-top: 10px;
-    margin-left: 30px;
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 10px;
-} */
 .photo {
     margin-bottom: 10px;
     width: 50px;
@@ -256,19 +255,14 @@ body {
     margin-right: 100px;
     font-weight: bold;
     position: fixed;
-    /* 固定位置，不随滚动条滚动 */
     z-index: 1000;
-    /* 确保导航栏在页面上的其他内容之上 */
     padding: 10px 0;
-    /* 添加一些内边距，根据需要调整 */
-
 }
 
 
 .navBar>button,
 input {
     margin-right: 10px;
-    /* 按钮之间的间隔 */
     width: auto;
     min-width: 30px;
 }
@@ -327,7 +321,7 @@ input {
     width: 150px;
     height: 150px;
     border-radius: 10px;
-    margin-left: 30px;
+    margin-left: 100px;
     object-fit: cover;
 
 
@@ -347,13 +341,33 @@ input {
     width: 100%;
     height: 200px;
     /* margin-bottom: 30px; */
-    /* Adjust based on your needs */
     padding-bottom: 110px;
-    /* Adjust so text doesn't overlap the image */
     box-sizing: border-box;
-    /* Ensures padding doesn't increase the size of the textarea */
 }
 
 .textarea-container img {
     margin-left: 70px;
 }
+.dynamic-button {
+    margin-right: 10px;
+    padding: 5px 10px;
+}
+/* .upload-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+} */
+/* 
+#previewContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-left: 400px; 
+} */
+
+/* .preview-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    object-fit: cover;
+} */
