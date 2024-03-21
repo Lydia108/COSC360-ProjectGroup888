@@ -13,6 +13,26 @@
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 
     <script>
+        window.onscroll = function() {
+            scrollFunction()
+        };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("backToTopButton").style.display = "block";
+            } else {
+                document.getElementById("backToTopButton").style.display = "none";
+            }
+        }
+
+        document.getElementById("backToTopButton").onclick = function() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+    </script>
+
+
+    <script>
         function toggleLike() {
             var like = document.getElementById("thumbsup");
             var like1 = document.getElementById("thumbsup1");
@@ -36,9 +56,7 @@
     <style>
         .dynamic-button {
             margin-right: 10px;
-            /* Adjust as needed */
             padding: 5px 10px;
-            /* Adjust as needed */
         }
     </style>
 
@@ -46,6 +64,9 @@
 
 
 <body>
+
+    <a href="#top" id="backToTopButton" title="Go to top"> TOP </a>
+
     <div class="sidebar">
         <a href="main.php"><i class="fa-solid fa-house-chimney">&nbsp;Home</i></a>
         <div class="search-bar">
