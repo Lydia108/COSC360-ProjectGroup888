@@ -129,7 +129,7 @@ exit();
             </div>
             <div class="button-container">
                 <button id="editButton">Edit</button>
-                <button id="updateButton" style="display: none;">Submit</button>
+                <button id="updateButton" style="display: none;">Save</button>
             </div>
         </span>
     </div>
