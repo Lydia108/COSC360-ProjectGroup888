@@ -342,7 +342,7 @@ button#comment:hover{
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: normal;
-    max-width: 82%; /*  */
+    max-width: 100%; /*  */
 }
 .user {
     font-weight: bold;

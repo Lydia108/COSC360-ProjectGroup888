@@ -50,8 +50,8 @@
         }
         const textarea = document.getElementById('autoresizing');
         textarea.addEventListener('input', function() {
-            this.style.height = 'auto'; // Reset the height
-            this.style.height = this.scrollHeight + 'px'; // Adjust height based on content
+            this.style.height = 'auto'; 
+            this.style.height = this.scrollHeight + 'px'; 
         });
     </script>
 
