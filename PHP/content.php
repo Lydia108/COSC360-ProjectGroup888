@@ -7,43 +7,91 @@
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../CSS/content.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src='https://www.w3schools.cn/fonts/kit/a076d05399.js'></script>
     <script src="https://kit.fontawesome.com/d1344ce34d.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/0485a9f289.js" crossorigin="anonymous"></script>
-    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
-
-    <script>
-        function toggleLike() {
-            var like = document.getElementById("thumbsup");
-            var like1 = document.getElementById("thumbsup1");
-
-            // Toggle visibility
-            if (like.style.display === "none") {
-                like.style.display = "inline-block";
-                like1.style.display = "none";
-            } else {
-                like.style.display = "none";
-                like1.style.display = "inline-block";
-            }
-        }
-        const textarea = document.getElementById('autoresizing');
-        textarea.addEventListener('input', function() {
-            this.style.height = 'auto'; // Reset the height
-            this.style.height = this.scrollHeight + 'px'; // Adjust height based on content
-        });
-    </script>
-
-    <style>
-        .dynamic-button {
-            margin-right: 10px;
-            /* Adjust as needed */
-            padding: 5px 10px;
-            /* Adjust as needed */
-        }
-    </style>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
+<!-- profile -->
+<?php
+session_start();
+include 'connection.php'; 
+if (isset($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
+    $stmt = $conn->prepare("SELECT firstName, lastName, emailAddress, icon FROM user WHERE userId = ?");
+    $stmt->bind_param("i", $userId); // 'i' indicates the type is integer
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        $firstName = htmlspecialchars($user['firstName']);
+        $lastName = htmlspecialchars($user['lastName']);
+        if ($user['icon']) {
+            $iconData = base64_encode($user['icon']);
+        } else {
+            $iconData = ''; 
+        }   // Convert the icon data to a data URI
+    } else {
+        echo "No user found.";
+    }
+    $stmt->close();
+} else {
+    header("Location: login.php");
+    exit();
+}
+?>
+<!-- content -->
+<?php
+include 'connection.php'; 
 
+$postId = isset($_GET['postId']) ? intval($_GET['postId']) : 0;
+
+if ($postId > 0) {
+    $stmt = $conn->prepare("SELECT p.*, u.firstName, u.lastName, u.icon FROM post p INNER JOIN user u ON p.postUserId = u.userId WHERE p.postId = ?");
+    $stmt->bind_param("i", $postId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($post = $result->fetch_assoc()) {
+        // Retrieve all pictures
+        $pictureStmt = $conn->prepare("SELECT postPicture FROM picture WHERE postId = ?");
+        $pictureStmt->bind_param("i", $postId);
+        $pictureStmt->execute();
+        $pictureResult = $pictureStmt->get_result();
+        $pictures = [];
+        while ($pictureRow = $pictureResult->fetch_assoc()) {
+            $pictures[] = 'data:image/jpeg;base64,' . base64_encode($pictureRow['postPicture']);
+        }
+        $pictureStmt->close();
+    } else {
+        echo "Post not found.";
+        exit();
+    }
+    $stmt->close();
+    $conn->close();
+} else {
+    echo "Invalid post ID.";
+    exit();
+}
+?>
+<!-- comment -->
+<?php
+include 'connection.php'; 
+$postId = isset($_GET['postId']) ? intval($_GET['postId']) : 0;
+if ($postId > 0) {
+    $commentsQuery = "SELECT c.*, u.firstName, u.lastName FROM comment c INNER JOIN user u ON c.postUserId = u.userId WHERE c.postId = ? ORDER BY c.postDate DESC";
+    $stmt = $conn->prepare($commentsQuery);
+    $stmt->bind_param("i", $postId);
+    $stmt->execute();
+    $commentsResult = $stmt->get_result();
+    $comments = [];
+    while($comment = $commentsResult->fetch_assoc()) {
+        $comments[] = $comment;
+    }
+    $stmt->close();
+    $conn->close();
+}
+?>
 
 <body>
     <div class="sidebar">
@@ -56,7 +104,22 @@
             <a href="post.php">Make Post</a>
             <div class="info">
                 <a href="profile.php">My Profile</a>
-                <img src="../Images/test.jpg" alt="Avatar">
+                <img src="<?php echo $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
+                    id="avatarImage" />
+                <div class="dropdown-content">
+                    <a href="profile.php">Profile</a>
+                    <a href="logout.php">Logout</a>
+                </div>
+                <?php
+if (isset($_SESSION['user_id'])) {
+$userId = $_SESSION['user_id'];
+
+echo "<div class='ses'>Welcome, " . $firstName . " " . $lastName . "</div>";
+} else {
+header("Location: login.php");
+exit();
+}
+?>
             </div>
         </div>
     </div>
@@ -76,11 +139,18 @@
 
     <div class="content">
         <p class="userName">
-            <img src="../Images/profile.jpg">
-            &nbsp;&nbsp;smith
+            <img src="<?= $post['icon'] ? 'data:image/jpeg;base64,'.base64_encode($post['icon']) : '../Images/profile.jpg'; ?>"
+                alt="Author's avatar" style="width: 50px; height: 50px; border-radius: 50%;">
+            <span><?= htmlspecialchars($post['firstName']) . " " . htmlspecialchars($post['lastName']); ?></span>
         </p>
-        <p class="datetime">2024-1-1 18:00:00</p>
-        <p class="context">sadasdsasdadaddsdandadaadakdakjacacascncsacnanasnccnascsanasnsansasjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjadadsadcascascasssssssssssssssssssadsadsacjsamcasncsanfkafnaskfnsanksakxnaknaknsxknassssssssssssssssssssssssssssssssssssssssssssssss</p>
+        <p class="datetime"><?= htmlspecialchars($post['postDate']); ?></p>
+        <h1><?= htmlspecialchars($post['postTitle']); ?></h1>
+        <p class="context"><?= nl2br(htmlspecialchars($post['postContent'])); ?></p>
+        <!-- Display all images -->
+        <?php foreach ($pictures as $picture): ?>
+        <img src="<?= $picture ?>" alt="Post image" style="max-width: 100%; margin-top: 10px;">
+        <?php endforeach; ?>
+
         <button id="comment"><i class='far fa-comment-alt'></i></button>
         <!-- <a href="#"><i class='far fa-thumbs-up' id="thumbsup" onclick="toggleLike()"></i></a>
         <a href="#"><i class='fas fa-thumbs-up' id="thumbsup1" style="display:none;" onclick="toggleLike()"></i></a> -->
@@ -94,33 +164,38 @@
         <br>
         <button id="submitComment">Comment</button>
     </div>
+    <script>
+    $(document).ready(function() {
+        $('.addComment').hide();
+        $('#comment').click(function() {
+            $('.addComment').toggle();
+        });
+    });
+    </script>
+
     <div class="separate">
         <hr>
     </div>
     <div class="commentsList">
         <ul>
+            <?php foreach ($comments as $index => $comment): ?>
             <li>
                 <img src="../Images/user.jpg">
+                <!--头像未更换 -->
                 <div class="contents">
-                    <span class="user">User_AAA: </span>
-                    <span class="dateTime"><i>2024-03-15 00:00</i></span>
-
-                    <span class="detail">hhhhhhh</span>
+                    <span
+                        class="user"><?= htmlspecialchars($comment['firstName']) . " " . htmlspecialchars($comment['lastName']); ?>:</span>
+                    <span class="dateTime"><i><?= htmlspecialchars($comment['postDate']); ?></i></span>
+                    <br>
+                    <span class="detail"><?= htmlspecialchars($comment['postComment']); ?></span>
                 </div>
             </li>
+            <?php if ($index < count($comments) - 1): ?>
+            <hr class="comment-divider">
+            <?php endif; ?>
+            <?php endforeach; ?>
         </ul>
     </div>
-    <!-- <div class="separate">
-        <hr>
-    </div>
-    <div class="showComment">
-        <p class="userName">
-            <img src="../Images/profile.jpg">
-            &nbsp;&nbsp;smith
-        </p>
-    </div> -->
-
-
 
     <div class="site-footer">
         <footer class="app">Bloggie</footer>
@@ -136,6 +211,40 @@
 
     </div>
 
+    <script>
+    $(document).ready(function() {
+        $('#submitComment').click(function(event) {
+            event.preventDefault(); // 
+            var comment = $('#autoresizing').val(); // 
+            var postId = <?= $postId; ?>; // 
+            // 确保评论不为空
+            if (comment.trim() === '') {
+                alert('Please enter a comment.');
+                return;
+            }
+
+            $.ajax({
+                url: 'uploadComment.php',
+                type: 'POST',
+                data: {
+                    comment: comment,
+                    postId: postId
+                },
+                success: function(data) {
+                    alert('Comment posted successfully!');
+                    $('#autoresizing').val('');
+                    $('.commentsList ul').append(data);
+                    window.location.reload(true);
+
+                },
+
+                error: function() {
+                    alert('Error posting the comment.');
+                }
+            });
+        });
+    });
+    </script>
 
 </body>
 
