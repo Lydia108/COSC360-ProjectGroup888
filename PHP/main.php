@@ -60,20 +60,35 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 ?>
-<!-- post -->
+<!-- post and picture-->
 <?php
 include 'connection.php';
-$query = "SELECT p.postId, p.postTitle, p.postContent, p.postTag, u.firstName, u.lastName FROM post p INNER JOIN user u ON p.postUserId = u.userId ORDER BY p.postDate DESC";
-$result = $conn->query($query);
+$query = "SELECT p.postId, p.postTitle, p.postContent, p.postTag, p.postDate, u.firstName, u.lastName, u.icon 
+FROM post p 
+INNER JOIN user u ON p.postUserId = u.userId 
+ORDER BY p.postDate DESC";
+$postsResult = $conn->query($query);
 $posts = [];
 
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
+if ($postsResult->num_rows > 0) {
+    while($row = $postsResult->fetch_assoc()) {
+        // firstPicture
+        $pictureQuery = "SELECT postPicture FROM picture WHERE postId = ? ORDER BY uploadTime ASC";
+        $pictureStmt = $conn->prepare($pictureQuery);
+        $pictureStmt->bind_param("i", $row['postId']);
+        $pictureStmt->execute();
+        $pictureResult = $pictureStmt->get_result();
+        if ($pictureRow = $pictureResult->fetch_assoc()) {
+            $row['firstPicture'] = 'data:image/jpeg;base64,' . base64_encode($pictureRow['postPicture']);
+        } else {
+            $row['firstPicture'] = '../Images/noImage.jpg';
+        }
         $posts[] = $row;
+        
     }
 }
-$conn->close();
 ?>
+
 
 <body>
 
@@ -107,29 +122,29 @@ $conn->close();
             </div>
         </div>
     </div>
-    <?php foreach ($posts as $row) : ?>
-        <div class="post" title="Click for more details">
-            <p class="title"><?= htmlspecialchars($row['postTitle']); ?></p>
-            <img src="../Images/th.jpg" alt="Thumbnail">
-            <div class="context"><?php
-                                    $postContent = htmlspecialchars($row['postContent']);
-                                    if (strlen($postContent) > 500) {
-                                        // if exceed 500 then ... for the rest
-                                        echo substr($postContent, 0, 500) . "......";
-                                    } else {
-                                        echo $postContent;
-                                    }
-                                    ?>
-            </div>
-            <div class="user">
-                <img src="<?php echo $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>" id="avatarImage" />
-                <p class="username" id="username">
-                    <?= htmlspecialchars($row['firstName']) . " " . htmlspecialchars($row['lastName']); ?></p>
-                <a href="#" title="Like"><i class='far fa-thumbs-up' id="thumbsup" onclick="toggleLike(event, this)"></i></a>
-                <a href="#" title="Unlike"><i class='fas fa-thumbs-up' id="thumbsup1" style="display:none;" onclick="toggleLike(event, this)"></i></a>
-            </div>
+
+    <?php foreach ($posts as $row): ?>
+    <div class="post" title="Click for more details"
+        onclick="window.location.href='content.php?postId=<?= $row['postId']; ?>';">
+        <p class="title"><?= htmlspecialchars($row['postTitle']); ?></p>
+        <img src="<?= $row['firstPicture'] ?>" alt="Post image"
+            style="max-width: 600px; height: 70%; object-fit:cover;">
+        <div class="context">
+            <?= strlen($row['postContent']) > 500 ? substr(htmlspecialchars($row['postContent']), 0, 500) . "..." : htmlspecialchars($row['postContent']); ?>
+        </div>
+        <div class="user">
+            <img src="<?= $row['icon'] ? 'data:image/jpeg;base64,' . base64_encode($row['icon']) : '../Images/profile.jpg'; ?>"
+                alt="User avatar" id="test" />
+            <p class="username" id="username">
+                <?= htmlspecialchars($row['firstName']) . " " . htmlspecialchars($row['lastName']); ?></p>
+            <a href="#" title="Like"><i class='far fa-thumbs-up' id="thumbsup"
+                    onclick="toggleLike(event, this)"></i></a>
+            <a href="#" title="Unlike"><i class='fas fa-thumbs-up' id="thumbsup1" style="display:none;"
+                    onclick="toggleLike(event, this)"></i></a>
         </div>
     <?php endforeach; ?>
+
+
     <script>
         function toggleLike(event, element) {
             event.stopPropagation();

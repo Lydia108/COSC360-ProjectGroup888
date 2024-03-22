@@ -72,7 +72,6 @@ body {
     display: flex;
     align-items: center;
     position: relative;
-    /* display: inline-block; */
 }
 
 .info:hover .dropdown-content {
@@ -110,9 +109,6 @@ body {
 
     /* cursor: pointer; */
 }
-
-
-
 
 .sidebar .actions {
     display: flex;
@@ -156,7 +152,7 @@ body {
     margin-right: 100px;
     font-weight: bold;
     position: fixed;
-    z-index: 7000;
+    z-index: 1002;
     padding: 10px 0;
 
 }
@@ -164,7 +160,6 @@ body {
 
 .navBar>button {
     margin-right: 10px;
-    /* 按钮之间的间隔 */
 }
 
 
@@ -183,7 +178,7 @@ body {
     margin-top: 100px;
     margin-left: 50px;
     margin-right: 50px;
-    width: 75%;
+    width: 80%;
     min-height: 600px;
     border-radius: 20px;
     background-color: rgba(255, 253, 253, 0.5);
@@ -201,7 +196,7 @@ body {
 .post img {
     margin-left: 30px;
     margin-top: 2px;
-    width: 35%;
+    width: 37%;
     height: 73%;
     border-radius: 10px;
     border: 1px solid black;
@@ -220,7 +215,7 @@ body {
     background-color: #f3cd4f;
     border-radius: 10px;
     float: right;
-    width: 47%;
+    width: 50%;
     height: 70%;
     overflow: hidden;
     margin-right: 30px;
@@ -269,7 +264,9 @@ body {
     color: #f2bf17;
     cursor: pointer;
 }
-
+.user{
+    position: relative;
+}
 .user img {
     border-radius: 50%;
     width: 50px;
@@ -282,23 +279,30 @@ body {
 
 .user #thumbsup {
     display: inline-block;
-    align-items: center;
-    vertical-align: middle;
-    margin-left: 76%;
-    margin-right: 5px;
-    font-size: 25px;
-    margin-bottom: 60px;
+    /* align-items: center;
+    vertical-align: middle; */
+    /* top: 50%; */
+    margin-left: 1%;
+    font-size: 27px;
+    margin-top: 23px;
+    margin-bottom: 30px;
+    position: absolute;
+
     color: black;
+
 }
 
 .user #thumbsup1 {
     display: inline-block;
-    align-items: center;
-    vertical-align: middle;
-    margin-left: 76%;
-    margin-right: 5px;
-    font-size: 25px;
-    margin-bottom: 60px;
+    /* align-items: center;
+    vertical-align: middle; */
+    /* top: 50%; */
+    margin-left: 1%;
+    font-size: 27px;
+    margin-top: 23px;
+    margin-bottom: 30px;
+    position: absolute;
+
     color: black;
 }
 

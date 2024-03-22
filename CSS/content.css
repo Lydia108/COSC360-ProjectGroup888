@@ -49,6 +49,8 @@ body {
 .sidebar .info {
     display: flex;
     align-items: center;
+    position: relative;
+
 }
 
 .sidebar .info a {
@@ -61,13 +63,17 @@ body {
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
-    margin-right: 30px;
+    margin-right: 10px;
+    transition: filter 0.3s ease;
+    cursor: pointer;
 }
 
 
 .sidebar .actions {
     display: flex;
     align-items: center;
+    justify-content: start;
+
 }
 
 .sidebar .actions a {
@@ -98,7 +104,7 @@ body {
 }
 
 .navBar {
-    margin-top: 100px;
+    margin-top: 170px;
     float: right;
     margin-left: 85%;
     overflow: visible;
@@ -149,60 +155,11 @@ body {
     margin-left: 10px;
 }
 
-.post {
-    float: left;
-    margin-top: 100px;
-    margin-left: 50px;
-    margin-right: 50px;
-    width: 75%;
-    min-height: 500px;
-    border-radius: 20px;
-    background-color: rgba(255, 253, 253, 0.5);
-}
-
-/* .post img {
-    margin-left: 30px;
-    margin-top: 2px;
-    width: 50%;
-    height: 73%;
-    border-radius: 10px;
-    border: 1px solid black;
-} */
-
-.post input.title {
-    margin-left: 30px;
-    border-radius: 20px;
-    padding: 10px 5px;
-    width: 50%;
+.content h1{
+    margin-left: 10px;
 
 }
 
-.post .context {
-    background-color: #f3cd4f;
-    border-radius: 10px;
-    /* float: auto; */
-    margin-left: 30px;
-    width: 92%;
-    height: 70%;
-    overflow: hidden;
-    /* margin-right: 30px; */
-    margin-top: 20px;
-    color: black;
-    font-size: 16px;
-    padding: 10px 10px;
-    text-align: left;
-
-}
-
-
-/* .post img#default{
-    margin-top: 10px;
-    margin-left: 30px;
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 10px;
-} */
 .photo {
     margin-bottom: 10px;
     width: 50px;
@@ -240,31 +197,20 @@ body {
     
 }
 
-.navBar {
-    margin-top: 100px;
-    float: right;
-    margin-left:85%;
-    overflow: visible;
-    width: 100px;
-    margin-right: 100px;
-    font-weight: bold;
-    position: fixed; /* 固定位置，不随滚动条滚动 */
-    z-index: 1000; /* 确保导航栏在页面上的其他内容之上 */
-    padding: 10px 0; /* 添加一些内边距，根据需要调整 */
-
-}
-
 
 .navBar > button, input{
-    margin-right: 10px; /* 按钮之间的间隔 */
+    margin-right: 10px; 
     width: auto;
     min-width: 30px;
 }
 button#comment{
+    display: block;
     border: 0;
-    font-size: 22px;
-    margin-left: 30px;
+    font-size: 28px;
+    float: right;
+    margin-right: 10px;
     background-color: #f2bf17;
+    margin-bottom: 10px;
 }
 button#comment:hover{
     color:#9c7b0d;
@@ -287,22 +233,24 @@ button#comment:hover{
     border-radius: 10px;
     border: 1px solid #f2bf17;
     padding:5px;
-    width: 69%;
+    /* width: 70%; */
     max-height: 300px;
-    max-width: 1050px;
+    max-width: 68%;
     min-height: 100px;
-    min-width: 500px;
+    min-width: 68%;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
 #submitComment{
     /* float: right; */
-    width: 7%;
+    width: 9%;
     border-radius: 10px;
     border: 1px solid black;
     background-color: #f2bf17;
-    padding: 5px 10px;
+    padding: 10px 10px;
     font-weight: bold;
-    margin-left:66%;
+    margin-left:63%;
     font-size: 16px;
     cursor: pointer;
     margin-top: 5px;
@@ -329,30 +277,34 @@ button#comment:hover{
     border-radius: 10px;
 }
 .datetime{
-    margin-left: 10px;
+    margin-left: 70px;
+    font-size:18px;
+    /* font-weight: bold; */
+
 }
 .context {
     width: 95%;
     word-wrap: break-word;
-    /* 允许在长单词或URL地址内部自动换行 */
     overflow-wrap: break-word;
-    /* 同上，推荐使用 */
     white-space: normal;
-    /* 确保空白处正常换行，这是默认值，通常不需要修改 */
     padding: 5px 0;
-    /* border: 1px solid #000; */
-    /* 为了清晰展示效果，给容器添加边框 */
     margin-left: 10px;
+    font-size: 22px;
 
 }
 .content img {
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    border-radius: 10%;
+    width: 130px;
+    height: 130px;
     float: left;
     margin-left: 10px;
+    margin-bottom: 10px;
+    object-fit:cover;
 }
-
+.commentsList {
+    width: 100%; /*  */
+    padding: 0 1%; /*  */
+}
 .commentsList ul{
     list-style-type: none;
 }
@@ -381,14 +333,76 @@ button#comment:hover{
     font-family: Arial, sans-serif;
 
 }
-
+.comment-divider {
+    width: 70%; /*  */
+    margin: 10px 10px; /*  */
+    border: 1px solid #ccc; /*  */
+}
+.contents, .detail {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 82%; /*  */
+}
 .user {
     font-weight: bold;
 }
 
-.dateTime {
-    font-size:6px;
+
+.dynamic-button {
+    margin-right: 10px;
+    padding: 5px 10px;
 }
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 150px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    text-align: center;
+    margin-top: 144px;
+    margin-left: 70px;
+    border-radius: 10px;
+   
+}
+.info:hover .dropdown-content {
+    display: block;
+
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    justify-content: center;
+    display: block;
+    width: 78%;
+
+}
+.info img:hover {
+    cursor: pointer;
+    filter: brightness(75%); 
+}
+.ses {
+    margin-right: 30px;
+    font-weight: bold;
+}
+.userName{
+    font-weight: bold;
+    margin-top: 20px;
+}
+.userName span{
+    margin-left: 10px;
+    font-size: 18px;
+}
+
 
 #backToTopButton {
     display: none; 
@@ -422,3 +436,4 @@ button#comment:hover{
     transform: translateY(1px); 
   }
    
+

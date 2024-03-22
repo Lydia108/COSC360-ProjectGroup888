@@ -12,61 +12,6 @@
     <script src="https://kit.fontawesome.com/0485a9f289.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-
-
-    <script>
-    document.getElementById('imageUpload').addEventListener('change', function(event) {
-        const files = event.target.files;
-        const previewContainer = document.getElementById('previewContainer');
-
-        // Check if adding the new files exceeds the limit of 5 images
-        if ((previewContainer.children.length + files.length) > 5) {
-            alert('You can select up to 5 images in total.');
-            return;
-        }
-        Array.from(files).forEach(file => {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var img = document.createElement('img');
-                img.setAttribute('src', e.target.result);
-                img.className = 'preview-img';
-                previewContainer.appendChild(img); // Append each new image
-            };
-            reader.readAsDataURL(file);
-        });
-    });
-    </script>
-    <script>
-    $(document).ready(function() {
-        $('#imageUpload').change(function(event) {
-            var file = event.target.files[0];
-            if (file) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#imagePreview').attr('src', e.target.result).show();
-                }
-
-                reader.readAsDataURL(file);
-            }
-        });
-    });
-    </script>
-    <script>
-    function toggleLike() {
-        var like = document.getElementById("thumbsup");
-        var like1 = document.getElementById("thumbsup1");
-
-        if (like.style.display === "none") {
-            like.style.display = "inline-block";
-            like1.style.display = "none";
-        } else {
-            like.style.display = "none";
-            like1.style.display = "inline-block";
-        }
-    }
-    </script>
-
-
 </head>
 <?php
 session_start();
@@ -87,7 +32,8 @@ if (isset($_SESSION['user_id'])) {
             $iconData = base64_encode($user['icon']);
         } else {
             $iconData = ''; 
-        }    } else {
+        }  
+    } else {
         echo "No user found.";
     }
     $stmt->close();
@@ -108,7 +54,8 @@ if (isset($_SESSION['user_id'])) {
             <a href="post.php">Make Post</a>
             <div class="info">
                 <a href="profile.php">My Profile</a>
-                <img src="../Images/test.jpg" alt="Avatar">
+                <img src="<?php echo $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
+                    id="avatarImage" />
                 <div class="dropdown-content">
                     <a href="profile.php">Profile</a>
                     <a href="logout.php">Logout</a>
@@ -161,13 +108,17 @@ exit();
         <input class="title" placeholder="Edit title..." />
         <br>
         <textarea class="context" placeholder="Enter text..."></textarea>
-        <img id="imagePreview" alt="Image preview" />
 
-        <button class="photo" onclick="document.getElementById('imageUpload').click();">
-            <i class="fa-regular fa-image" id="symbol"></i>
-        </button>
+        <img id="imagePreview" alt="Image preview" />
+        <div class="upload-row">
+            <button class="photo" onclick="document.getElementById('imageUpload').click();">
+                <i class="fa-regular fa-image" id="symbol"></i>
+            </button>
+            <div id="previewContainer"></div>
+            <button class="submit">Post now</button>
+        </div>
         <input type="file" id="imageUpload" accept="image/*" multiple style="display: none;" />
-        <button class="submit">Post now</button>
+
     </div>
     <div class="site-footer">
         <footer class="app">Bloggie</footer>
@@ -185,7 +136,7 @@ exit();
     <script>
     $(document).ready(function() {
         $('.submit').click(function(event) {
-            event.preventDefault(); 
+            event.preventDefault();
 
             let postTitle = $('.title').val();
             let postContent = $('.context').val();
@@ -214,6 +165,45 @@ exit();
         });
 
     });
+    </script>
+    <script>
+    document.getElementById('imageUpload').addEventListener('change', function(event) {
+        const files = event.target.files;
+        const previewContainer = document.getElementById('previewContainer');
+
+        if (previewContainer.children.length + files.length > 5) {
+            alert('You can select up to 5 images in total.');
+            return;
+        }
+
+        Array.from(files).forEach(file => {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.createElement('img');
+                img.setAttribute('src', e.target.result);
+                img.className = 'preview-img';
+                img.onclick = function() {
+                    previewContainer.removeChild(img);
+                };
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+    </script>
+    <script>
+    function toggleLike() {
+        var like = document.getElementById("thumbsup");
+        var like1 = document.getElementById("thumbsup1");
+
+        if (like.style.display === "none") {
+            like.style.display = "inline-block";
+            like1.style.display = "none";
+        } else {
+            like.style.display = "none";
+            like1.style.display = "inline-block";
+        }
+    }
     </script>
 
 </body>

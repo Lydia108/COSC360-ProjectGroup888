@@ -127,7 +127,8 @@ body {
     padding: 10px 10px;
     font-weight: bold;
 }
-.navBar button:hover{
+
+.navBar button:hover {
     cursor: pointer;
     text-decoration: underline;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -165,7 +166,7 @@ body {
     margin-left: 50px;
     margin-right: 50px;
     width: 75%;
-    min-height: 700px;
+    min-height: 750px;
     border-radius: 20px;
     background-color: rgba(255, 253, 253, 0.5);
 }
@@ -227,15 +228,15 @@ body {
 }
 
 .post .submit {
-    margin-right: 50px;
+    margin-right: 25px;
     float: right;
-    margin-top: 50px;
+    margin-top: 40px;
     padding: 10px 10px;
     border-radius: 20px;
     background-color: #f2bf17;
     font-size: 18px;
     font-weight: bold;
-    width: 150px;
+    width: 160px;
 
 }
 
@@ -348,26 +349,41 @@ input {
 .textarea-container img {
     margin-left: 70px;
 }
+
 .dynamic-button {
     margin-right: 10px;
     padding: 5px 10px;
 }
-/* .upload-container {
+
+.upload-row {
     display: flex;
     align-items: center;
-    gap: 10px;
-} */
-/* 
+    gap: 20px;
+}
+
 #previewContainer {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-left: 400px; 
-} */
+    flex-wrap: nowrap;
+    gap: 30px;
+    align-items: center;
+    overflow-x: auto;
+    margin-top: 5px;
+}
 
-/* .preview-img {
+.preview-img {
     width: 150px;
     height: 150px;
-    border-radius: 10px;
     object-fit: cover;
-} */
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    /* 平滑过渡效果 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* 添加基本阴影 */
+}
+
+.preview-img:hover {
+    filter: brightness(75%);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
