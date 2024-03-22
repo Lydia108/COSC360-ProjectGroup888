@@ -9,7 +9,60 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://kit.fontawesome.com/d1344ce34d.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/0485a9f289.js" crossorigin="anonymous"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+    <script>
+        window.onscroll = function() {
+            scrollFunction()
+        };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("backToTopButton").style.display = "block";
+            } else {
+                document.getElementById("backToTopButton").style.display = "none";
+            }
+        }
+
+        document.getElementById("backToTopButton").onclick = function() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+    </script>
+
+
+    <script>
+        function toggleLike() {
+            var like = document.getElementById("thumbsup");
+            var like1 = document.getElementById("thumbsup1");
+
+            // Toggle visibility
+            if (like.style.display === "none") {
+                like.style.display = "inline-block";
+                like1.style.display = "none";
+            } else {
+                like.style.display = "none";
+                like1.style.display = "inline-block";
+            }
+        }
+        const textarea = document.getElementById('autoresizing');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto'; // Reset the height
+            this.style.height = this.scrollHeight + 'px'; // Adjust height based on content
+        });
+    </script>
+
+    <style>
+        .dynamic-button {
+            margin-right: 10px;
+            padding: 5px 10px;
+        }
+    </style>
+
+
 </head>
 <!-- profile -->
 <?php
@@ -94,6 +147,9 @@ if ($postId > 0) {
 ?>
 
 <body>
+
+    <a href="#top" id="backToTopButton" title="Go to top"> TOP </a>
+
     <div class="sidebar">
         <a href="main.php"><i class="fa-solid fa-house-chimney">&nbsp;Home</i></a>
         <div class="search-bar">

@@ -11,18 +11,37 @@
     <script src="https://kit.fontawesome.com/d1344ce34d.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/0485a9f289.js" crossorigin="anonymous"></script>
 
+    <script>
+        window.onscroll = function() {
+            scrollFunction()
+        };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("backToTopButton").style.display = "block";
+            } else {
+                document.getElementById("backToTopButton").style.display = "none";
+            }
+        }
+
+        document.getElementById("backToTopButton").onclick = function() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+    </script>
+
 </head>
 <!-- profile -->
 <?php
 session_start();
-include 'connection.php'; 
+include 'connection.php';
 if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id'];
     $stmt = $conn->prepare("SELECT firstName, lastName, emailAddress, icon FROM user WHERE userId = ?");
     $stmt->bind_param("i", $userId); // 'i' indicates the type is integer
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         $firstName = htmlspecialchars($user['firstName']);
@@ -30,7 +49,7 @@ if (isset($_SESSION['user_id'])) {
         if ($user['icon']) {
             $iconData = base64_encode($user['icon']);
         } else {
-            $iconData = ''; 
+            $iconData = '';
         }   // Convert the icon data to a data URI
     } else {
         echo "No user found.";
@@ -43,6 +62,7 @@ if (isset($_SESSION['user_id'])) {
 ?>
 <!-- post and picture-->
 <?php
+include 'connection.php';
 $query = "SELECT p.postId, p.postTitle, p.postContent, p.postTag, p.postDate, u.firstName, u.lastName, u.icon 
 FROM post p 
 INNER JOIN user u ON p.postUserId = u.userId 
@@ -71,6 +91,9 @@ if ($postsResult->num_rows > 0) {
 
 
 <body>
+
+    <a href="#top" id="backToTopButton" title="Go to top"> TOP </a>
+
     <div class="sidebar">
         <a href="#"><i class="fa-solid fa-house-chimney">&nbsp;Home</i></a>
         <div class="search-bar">
@@ -81,25 +104,25 @@ if ($postsResult->num_rows > 0) {
             <a href="post.php">Make Post</a>
             <div class="info">
                 <a href="profile.php">My Profile</a>
-                <img src="<?php echo $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
-                    id="avatarImage" />
+                <img src="<?php echo $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>" id="avatarImage" />
                 <div class="dropdown-content">
                     <a href="profile.php">Profile</a>
                     <a href="logout.php">Logout</a>
                 </div>
                 <?php
-if (isset($_SESSION['user_id'])) {
-$userId = $_SESSION['user_id'];
+                if (isset($_SESSION['user_id'])) {
+                    $userId = $_SESSION['user_id'];
 
-echo "<div class='ses'>Welcome, " . $firstName . " " . $lastName . "</div>";
-} else {
-header("Location: login.php");
-exit();
-}
-?>
+                    echo "<div class='ses'>Welcome, " . $firstName . " " . $lastName . "</div>";
+                } else {
+                    header("Location: login.php");
+                    exit();
+                }
+                ?>
             </div>
         </div>
     </div>
+
     <?php foreach ($posts as $row): ?>
     <div class="post" title="Click for more details"
         onclick="window.location.href='content.php?postId=<?= $row['postId']; ?>';">
@@ -119,18 +142,17 @@ exit();
             <a href="#" title="Unlike"><i class='fas fa-thumbs-up' id="thumbsup1" style="display:none;"
                     onclick="toggleLike(event, this)"></i></a>
         </div>
-    </div>
     <?php endforeach; ?>
 
 
     <script>
-    function toggleLike(event, element) {
-        event.stopPropagation();
-        var like = element.id === "thumbsup" ? "thumbsup" : "thumbsup1";
-        var oppositeLike = element.id === "thumbsup" ? "thumbsup1" : "thumbsup";
-        element.style.display = "none";
-        document.getElementById(oppositeLike).style.display = "inline-block";
-    }
+        function toggleLike(event, element) {
+            event.stopPropagation();
+            var like = element.id === "thumbsup" ? "thumbsup" : "thumbsup1";
+            var oppositeLike = element.id === "thumbsup" ? "thumbsup1" : "thumbsup";
+            element.style.display = "none";
+            document.getElementById(oppositeLike).style.display = "inline-block";
+        }
     </script>
 
     <div class="navBar">
