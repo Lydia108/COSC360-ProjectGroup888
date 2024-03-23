@@ -73,7 +73,7 @@ $posts = [];
 if ($postsResult->num_rows > 0) {
     while($row = $postsResult->fetch_assoc()) {
         // firstPicture
-        $pictureQuery = "SELECT postPicture FROM picture WHERE postId = ? ORDER BY uploadTime ASC";
+        $pictureQuery = "SELECT postPicture FROM picture WHERE postId = ?";
         $pictureStmt = $conn->prepare($pictureQuery);
         $pictureStmt->bind_param("i", $row['postId']);
         $pictureStmt->execute();

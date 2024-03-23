@@ -363,6 +363,7 @@ button#comment:hover{
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: normal;
+
     max-width: 1050px; /*  */
 }
 .user {
