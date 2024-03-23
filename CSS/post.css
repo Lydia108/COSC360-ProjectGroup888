@@ -98,22 +98,25 @@ body {
 }
 
 .sidebar .search-bar input[type="text"] {
-    padding: 5px;
+    padding: 5px 10px;
     margin-right: 5px;
     flex-grow: 1;
-    border-radius: 20px;
-
+    border-radius: 10px;
+    box-sizing: border-box;
+    height: 40px;
+    font-size: 20px;
 }
-
-.sidebar .search-bar button {
+.sidebar .search-bar i {
+    color: black;
+    font-size: 22px;
     cursor: pointer;
-    border-radius: 50%;
-    padding: 5px 10px;
 }
 
-
-
-
+.sidebar .search-bar i:hover {
+    text-decoration: underline;
+    color: #f2bf17;
+    cursor: pointer;
+}
 .navBar>button {
     margin-right: 10px;
 }

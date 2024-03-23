@@ -123,6 +123,7 @@ body {
 .sidebar .search-bar {
     margin: 10px 0;
     display: flex;
+    position: relative;
     align-items: center;
     /* border-radius: 20px; */
     width: 800px;
@@ -130,17 +131,13 @@ body {
 }
 
 .sidebar .search-bar input[type="text"] {
-    padding: 5px;
+    padding: 5px 10px;
     margin-right: 5px;
     flex-grow: 1;
-    border-radius: 20px;
-
-}
-
-.sidebar .search-bar button {
-    cursor: pointer;
-    border-radius: 50%;
-    padding: 5px 10px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    height: 40px;
+    font-size: 20px;
 }
 
 .navBar {
@@ -197,7 +194,8 @@ body {
     margin-left: 30px;
     margin-top: 2px;
     width: 37%;
-    height: 73%;
+    height: 70%;
+    object-fit: cover;
     border-radius: 10px;
     border: 1px solid black;
 }
@@ -256,7 +254,7 @@ body {
 .sidebar .search-bar i {
     color: black;
     font-size: 22px;
-
+    cursor: pointer;
 }
 
 .sidebar .search-bar i:hover {
@@ -264,9 +262,11 @@ body {
     color: #f2bf17;
     cursor: pointer;
 }
-.user{
+
+.user {
     position: relative;
 }
+
 .user img {
     border-radius: 50%;
     width: 50px;
@@ -345,41 +345,41 @@ body {
     margin-top: 10px;
     margin-left: 10px;
 }
+
 .info img:hover {
     cursor: pointer;
-    filter: brightness(75%); 
+    filter: brightness(75%);
 }
 
 
 #backToTopButton {
-    display: none; 
-    position: fixed; 
-    bottom: 15px; 
-    right: 10px; 
-    z-index: 9999999999999999999; 
-    font-size: 18px; 
-    border: none; 
-    outline: none; 
-    background-color: #d4ca87; 
-    color: white; 
-    cursor: pointer; 
-    padding: 15px; 
-    border-radius: 25%; 
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19); 
-    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s; 
+    display: none;
+    position: fixed;
+    bottom: 15px;
+    right: 10px;
+    z-index: 9999999999999999999;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background-color: #d4ca87;
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 25%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
     text-decoration: none;
     font-weight: bold;
-  }
-  
-  #backToTopButton:hover {
-    background-color: #2a1c02; 
-    box-shadow: 0 5px 10px 0 rgba(0,0,0,0.25), 0 8px 25px 0 rgba(0,0,0,0.22); 
-    transform: translateY(-2px); 
-  }
-  
-  #backToTopButton:active {
-    background-color: #130d01; 
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 3px 10px 0 rgba(0,0,0,0.19);
-    transform: translateY(1px); 
-  }
-   
+}
+
+#backToTopButton:hover {
+    background-color: #2a1c02;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.25), 0 8px 25px 0 rgba(0, 0, 0, 0.22);
+    transform: translateY(-2px);
+}
+
+#backToTopButton:active {
+    background-color: #130d01;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+    transform: translateY(1px);
+}
