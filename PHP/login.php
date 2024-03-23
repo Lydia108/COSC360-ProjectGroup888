@@ -6,6 +6,7 @@
     <title>Bloggie</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../CSS/signup.css">
+
     <script defer>
     window.addEventListener('DOMContentLoaded', (event) => {
         document.querySelector("form[name='handleSignup']").addEventListener("submit", function(e) {
@@ -41,6 +42,46 @@
         document.getElementById("toggleText").addEventListener("click", togglePasswordVisibility);
     });
     </script>
+    <canvas id="canvas"></canvas>
+    <script>
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    var particles = [];
+    for (var i = 0; i < 100; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 5 + 1,
+            color: 'white',
+            speedX: (Math.random() - 0.5) * 2,
+            speedY: (Math.random() - 0.5) * 2
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(function(p) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+
+            p.x += p.speedX;
+            p.y += p.speedY;
+
+            if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+        });
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+    </script>
 </head>
 
 
@@ -49,8 +90,14 @@ session_start();
 
 include "connection.php";
 
-if (isset($_SESSION['user_id'])) {
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']) {
     header("Location: main.php");
+    exit();
+}
+
+if (isset($_GET['guest']) && $_GET['guest'] === 'true') {
+    $_SESSION['is_guest'] = true;
+    header('Location: main.php');
     exit();
 }
 
@@ -63,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (mysqli_num_rows($results) > 0) {
         $row = mysqli_fetch_assoc($results);
         $_SESSION['user_id'] = $row['userId'];
-        $_SESSION['logged_in'] = true; 
+        $_SESSION['logged_in'] = true; // 
         header("Location: main.php");
         exit();
     } else {
@@ -72,6 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 }
+
 
 if (isset($_SESSION['error_message'])) {
     $error_message = $_SESSION['error_message'];
@@ -105,7 +153,13 @@ if (isset($_SESSION['error_message'])) {
             <div class="goToLogin">
                 Don't have an account? <a href="signup.php">Click here</a> to register.
                 <br>
-                <button type="button" onclick="location.href='main.php'">Login as a guest</button>
+                <button id="loginAsGuest">Login as a guest</button>
+                <script>
+                document.getElementById('loginAsGuest').addEventListener('click', function() {
+                    window.location.href = 'login.php?guest=true'; // guest
+                });
+                </script>
+
             </div>
             <button type="submit" id="guest">Sign in</button>
         </form>

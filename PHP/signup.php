@@ -1,4 +1,77 @@
+<?php
+ob_start(); // Start output buffering at the beginning of the script
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    include 'connection.php'; // Include your database connection script
+    // Read the content of the default avatar image
+    $defaultAvatarPath = '../Images/profile.jpg'; // Adjust the path as necessary
+    $avatarContent = file_get_contents($defaultAvatarPath);
+    // Sanitize input and assign variables
+    $firstName = isset($_POST['firstName']) ? $conn->real_escape_string($_POST['firstName']) : '';
+    $lastName = isset($_POST['lastName']) ? $conn->real_escape_string($_POST['lastName']) : '';
+    $email = isset($_POST['email']) ? $conn->real_escape_string($_POST['email']) : '';
+    $password = isset($_POST['password']) ? $conn->real_escape_string($_POST['password']) : ''; 
+    $userType = 0; // Default user type
+
+    // Validate input lengths and formats
+    if (strlen($firstName) > 30 || strlen($lastName) > 30) {
+        echo "Name too long.";
+        $conn->close();
+        exit();
+    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "Invalid email format.";
+        $conn->close();
+        exit();
+    }
+    if (strlen($password) < 6 || strlen($password) > 30 || 
+        !preg_match('/[A-Z]/', $password) || // Check for uppercase
+        !preg_match('/[a-z]/', $password) || // Check for lowercase
+        !preg_match('/\d/', $password) ||    // Check for digit
+        !preg_match('/[!@#$%^&*()-=_+{}[\]|:\'",.<>?\/]/', $password)) { 
+        echo "Invalid password format.";
+        $conn->close();
+        exit();
+    }
+
+    // Check if email already exists
+    $checkEmailQuery = "SELECT * FROM user WHERE emailAddress = '$email'";
+    $result = $conn->query($checkEmailQuery);
+    if ($result->num_rows > 0) {
+        echo "<script>
+                alert('Email already in use. Please use a different email.');
+                window.location.href='signup.php';
+              </script>";
+        $conn->close();
+        exit();
+    }
+
+    $sql = "INSERT INTO user (firstName, lastName, emailAddress, password, icon, userType) VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('ssssbi', $firstName, $lastName, $email, $password, $null, $userType);
+    $null = null; 
+    $stmt->send_long_data(4, $avatarContent); 
+    if ($stmt->execute()) {
+        $newUserId = $conn->insert_id;
+        $_SESSION['user_id'] = $newUserId; 
+        unset($_SESSION['is_guest']); 
+        header("Location: main.php");
+        exit();
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+    
+    
+    
+    $stmt->close();
+
+    $conn->close(); // 
+}
+ob_end_flush(); 
+?>
 <!DOCTYPE html>
+
 <html>
 
 <head lang="en">
@@ -100,75 +173,50 @@
         document.getElementById("toggleText").addEventListener("click", togglePasswordVisibility);
     });
     </script>
+    <canvas id="canvas"></canvas>
+    <script>
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    var particles = [];
+    for (var i = 0; i < 100; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 5 + 1,
+            color: 'white',
+            speedX: (Math.random() - 0.5) * 2,
+            speedY: (Math.random() - 0.5) * 2
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(function(p) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+
+            p.x += p.speedX;
+            p.y += p.speedY;
+
+            if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+        });
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+    </script>
 </head>
-<?php
-ob_start(); // Start output buffering at the beginning of the script
-
-// Check if the form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    include 'connection.php'; // Include your database connection script
-    // Read the content of the default avatar image
-    $defaultAvatarPath = '../Images/profile.jpg'; // Adjust the path as necessary
-    $avatarContent = file_get_contents($defaultAvatarPath);
-    // Sanitize input and assign variables
-    $firstName = isset($_POST['firstName']) ? $conn->real_escape_string($_POST['firstName']) : '';
-    $lastName = isset($_POST['lastName']) ? $conn->real_escape_string($_POST['lastName']) : '';
-    $email = isset($_POST['email']) ? $conn->real_escape_string($_POST['email']) : '';
-    $password = isset($_POST['password']) ? $conn->real_escape_string($_POST['password']) : ''; 
-    $userType = 0; // Default user type
-
-    // Validate input lengths and formats
-    if (strlen($firstName) > 30 || strlen($lastName) > 30) {
-        echo "Name too long.";
-        $conn->close();
-        exit();
-    }
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "Invalid email format.";
-        $conn->close();
-        exit();
-    }
-    if (strlen($password) < 6 || strlen($password) > 30 || 
-        !preg_match('/[A-Z]/', $password) || // Check for uppercase
-        !preg_match('/[a-z]/', $password) || // Check for lowercase
-        !preg_match('/\d/', $password) ||    // Check for digit
-        !preg_match('/[!@#$%^&*()-=_+{}[\]|:\'",.<>?\/]/', $password)) { 
-        echo "Invalid password format.";
-        $conn->close();
-        exit();
-    }
-
-    // Check if email already exists
-    $checkEmailQuery = "SELECT * FROM user WHERE emailAddress = '$email'";
-    $result = $conn->query($checkEmailQuery);
-    if ($result->num_rows > 0) {
-        echo "<script>
-                alert('Email already in use. Please use a different email.');
-                window.location.href='signup.php';
-              </script>";
-        $conn->close();
-        exit();
-    }
-
-    $sql = "INSERT INTO user (firstName, lastName, emailAddress, password, icon, userType) VALUES (?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('ssssbi', $firstName, $lastName, $email, $password, $null, $userType);
-    $null = null; 
-    $stmt->send_long_data(4, $avatarContent); 
-    if ($stmt->execute()) {
-        echo "<script>alert('New account created!'); window.location.href='login.php';</script>";
-    } else {
-        echo "Error: " . $stmt->error;
-    }
-    $stmt->close();
-
-    $conn->close(); // 
-}
-ob_end_flush(); 
-?>
-
 
 <body>
+    
     <div class="name">
         <h1>Bloggie</h1>
     </div>
