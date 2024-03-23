@@ -15,51 +15,51 @@
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 
     <script>
-        window.onscroll = function() {
-            scrollFunction()
-        };
+    window.onscroll = function() {
+        scrollFunction()
+    };
 
-        function scrollFunction() {
-            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                document.getElementById("backToTopButton").style.display = "block";
-            } else {
-                document.getElementById("backToTopButton").style.display = "none";
-            }
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            document.getElementById("backToTopButton").style.display = "block";
+        } else {
+            document.getElementById("backToTopButton").style.display = "none";
         }
+    }
 
-        document.getElementById("backToTopButton").onclick = function() {
-            document.body.scrollTop = 0; // For Safari
-            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-        }
+    document.getElementById("backToTopButton").onclick = function() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
     </script>
 
 
     <script>
-        function toggleLike() {
-            var like = document.getElementById("thumbsup");
-            var like1 = document.getElementById("thumbsup1");
+    function toggleLike() {
+        var like = document.getElementById("thumbsup");
+        var like1 = document.getElementById("thumbsup1");
 
-            // Toggle visibility
-            if (like.style.display === "none") {
-                like.style.display = "inline-block";
-                like1.style.display = "none";
-            } else {
-                like.style.display = "none";
-                like1.style.display = "inline-block";
-            }
+        // Toggle visibility
+        if (like.style.display === "none") {
+            like.style.display = "inline-block";
+            like1.style.display = "none";
+        } else {
+            like.style.display = "none";
+            like1.style.display = "inline-block";
         }
-        const textarea = document.getElementById('autoresizing');
-        textarea.addEventListener('input', function() {
-            this.style.height = 'auto'; // Reset the height
-            this.style.height = this.scrollHeight + 'px'; // Adjust height based on content
-        });
+    }
+    const textarea = document.getElementById('autoresizing');
+    textarea.addEventListener('input', function() {
+        this.style.height = 'auto'; // Reset the height
+        this.style.height = this.scrollHeight + 'px'; // Adjust height based on content
+    });
     </script>
 
     <style>
-        .dynamic-button {
-            margin-right: 10px;
-            padding: 5px 10px;
-        }
+    .dynamic-button {
+        margin-right: 10px;
+        padding: 5px 10px;
+    }
     </style>
 
 
@@ -132,7 +132,11 @@ if ($postId > 0) {
 include 'connection.php'; 
 $postId = isset($_GET['postId']) ? intval($_GET['postId']) : 0;
 if ($postId > 0) {
-    $commentsQuery = "SELECT c.*, u.firstName, u.lastName FROM comment c INNER JOIN user u ON c.postUserId = u.userId WHERE c.postId = ? ORDER BY c.postDate DESC";
+    $commentsQuery = "SELECT c.*, u.firstName, u.lastName, u.icon 
+    FROM comment c 
+    INNER JOIN user u ON c.postUserId = u.userId 
+    WHERE c.postId = ? 
+    ORDER BY c.postDate DESC";
     $stmt = $conn->prepare($commentsQuery);
     $stmt->bind_param("i", $postId);
     $stmt->execute();
@@ -147,9 +151,7 @@ if ($postId > 0) {
 ?>
 
 <body>
-
     <a href="#top" id="backToTopButton" title="Go to top"> TOP </a>
-
     <div class="sidebar">
         <a href="main.php"><i class="fa-solid fa-house-chimney">&nbsp;Home</i></a>
         <div class="search-bar">
@@ -206,7 +208,6 @@ exit();
         <?php foreach ($pictures as $picture): ?>
         <img src="<?= $picture ?>" alt="Post image" style="max-width: 100%; margin-top: 10px;">
         <?php endforeach; ?>
-
         <button id="comment"><i class='far fa-comment-alt'></i></button>
         <!-- <a href="#"><i class='far fa-thumbs-up' id="thumbsup" onclick="toggleLike()"></i></a>
         <a href="#"><i class='fas fa-thumbs-up' id="thumbsup1" style="display:none;" onclick="toggleLike()"></i></a> -->
@@ -236,11 +237,10 @@ exit();
         <ul>
             <?php foreach ($comments as $index => $comment): ?>
             <li>
-                <img src="../Images/user.jpg">
-                <!--头像未更换 -->
+                <img src="<?= $comment['icon'] ? 'data:image/jpeg;base64,' . base64_encode($comment['icon']) : '../Images/profile.jpg'; ?>"
+                    alt="User Avatar" class="avatar">
                 <div class="contents">
-                    <span
-                        class="user"><?= htmlspecialchars($comment['firstName']) . " " . htmlspecialchars($comment['lastName']); ?>:</span>
+                    <span class="user"><?= htmlspecialchars($comment['firstName']) . " " . htmlspecialchars($comment['lastName']); ?>:</span>
                     <span class="dateTime"><i><?= htmlspecialchars($comment['postDate']); ?></i></span>
                     <br>
                     <span class="detail"><?= htmlspecialchars($comment['postComment']); ?></span>
@@ -252,6 +252,7 @@ exit();
             <?php endforeach; ?>
         </ul>
     </div>
+
 
     <div class="site-footer">
         <footer class="app">Bloggie</footer>

@@ -115,6 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $lastName = isset($_POST['lastName']) ? $conn->real_escape_string($_POST['lastName']) : '';
     $email = isset($_POST['email']) ? $conn->real_escape_string($_POST['email']) : '';
     $password = isset($_POST['password']) ? $conn->real_escape_string($_POST['password']) : ''; 
+    $userType = 0; // Default user type
 
     // Validate input lengths and formats
     if (strlen($firstName) > 30 || strlen($lastName) > 30) {
@@ -149,12 +150,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    // Insert new record
-    $sql = "INSERT INTO user (firstName, lastName, emailAddress, password, icon) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO user (firstName, lastName, emailAddress, password, icon, userType) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param('ssssb', $firstName, $lastName, $email, $password, $null);
-
-    $null = null; // This is needed as a placeholder for the blob data
+    $stmt->bind_param('ssssbi', $firstName, $lastName, $email, $password, $null, $userType);
+    $null = null; 
     $stmt->send_long_data(4, $avatarContent); 
     if ($stmt->execute()) {
         echo "<script>alert('New account created!'); window.location.href='login.php';</script>";
@@ -163,11 +162,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $stmt->close();
 
-    $conn->close(); // Close database connection
+    $conn->close(); // 
 }
-
-ob_end_flush(); // Send output buffer and turn off output buffering
+ob_end_flush(); 
 ?>
+
 
 <body>
     <div class="name">

@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id'])) {
         $stmt = $conn->prepare("INSERT INTO comment (postId, postComment, postUserId, postDate) VALUES (?, ?, ?, NOW())");
         $stmt->bind_param("isi", $postId, $comment, $userId);
         if ($stmt->execute()) {
-            echo "Comment posted successfully!";
+            echo "Loading...Please hold...";
         } else {
             echo "Error: " . $stmt->error;
         }

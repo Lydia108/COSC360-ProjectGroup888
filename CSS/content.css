@@ -17,6 +17,7 @@ html,
 body {
     height: 100%;
     margin: 0;
+    overflow-x: hidden;
 }
 
 .sidebar {
@@ -90,13 +91,25 @@ body {
 }
 
 .sidebar .search-bar input[type="text"] {
-    padding: 5px;
+    padding: 5px 10px;
     margin-right: 5px;
     flex-grow: 1;
-    border-radius: 20px;
-
+    border-radius: 10px;
+    box-sizing: border-box;
+    height: 40px;
+    font-size: 20px;
+}
+.sidebar .search-bar i {
+    color: black;
+    font-size: 22px;
+    cursor: pointer;
 }
 
+.sidebar .search-bar i:hover {
+    text-decoration: underline;
+    color: #f2bf17;
+    cursor: pointer;
+}
 .sidebar .search-bar button {
     cursor: pointer;
     border-radius: 50%;
@@ -106,7 +119,7 @@ body {
 .navBar {
     margin-top: 170px;
     float: right;
-    margin-left: 85%;
+    margin-left:80%;
     overflow: visible;
     width: 100px;
     margin-right: 100px;
@@ -135,6 +148,7 @@ body {
 .site-footer {
     margin-top: 100px;
     z-index: 1001;
+    width: 70%;
     margin-left: 50px;
     background-color: rgba(255, 253, 253, 0.5);
     border-radius: 10px;
@@ -204,17 +218,19 @@ body {
     min-width: 30px;
 }
 button#comment{
-    display: block;
+    display: inline;
     border: 0;
-    font-size: 28px;
+    margin-top: 100px;
+    font-size: 32px;
     float: right;
     margin-right: 10px;
     background-color: #f2bf17;
     margin-bottom: 10px;
 }
 button#comment:hover{
-    color:#9c7b0d;
+    transform: translateY(-2px); 
     cursor: pointer;
+    text-decoration: underline;
     
 }
 .separate {
@@ -279,6 +295,7 @@ button#comment:hover{
 .datetime{
     margin-left: 70px;
     font-size:18px;
+    padding-top: 0px;
     /* font-weight: bold; */
 
 }
@@ -323,29 +340,34 @@ button#comment:hover{
 
 .commentsList img {
     width: 50px; /* Adjust the width as needed */
-    height: auto; /* Keeps the aspect ratio of the image */
+    height: 50px; /* Keeps the aspect ratio of the image */
     border-radius: 50%; /* Optional: makes the image circular */
+    object-fit: cover;
 }
 
 .contents {
     display: flex;
     flex-direction: column; 
     font-family: Arial, sans-serif;
+    /* font-size: 26px; */
 
 }
 .comment-divider {
-    width: 70%; /*  */
-    margin: 10px 10px; /*  */
+    width: 72%; /*  */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 0;
     border: 1px solid #ccc; /*  */
 }
-.contents, .detail {
+.contents .detail {
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: normal;
-    max-width: 82%; /*  */
+    max-width: 1050px; /*  */
 }
 .user {
     font-weight: bold;
+    font-size: 26px;
 }
 
 
@@ -400,7 +422,7 @@ button#comment:hover{
 }
 .userName span{
     margin-left: 10px;
-    font-size: 18px;
+    font-size: 26px;
 }
 
 
