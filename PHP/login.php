@@ -137,7 +137,7 @@ if (isset($_SESSION['error_message'])) {
         <h1>Bloggie</h1>
     </div>
     <div class="container">
-        <form name="handleSignup" action="login.php" onsubmit="return validateForm();" method="post">
+        <form name="handleSignup" action="login.php"  method="post">
             <h2>Sign in!</h2>
             <!-- <div class="row"> -->
             <img src="../Images/profile.jpg" />
