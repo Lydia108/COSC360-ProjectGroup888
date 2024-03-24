@@ -6,8 +6,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userId = $_SESSION['user_id'] ?? null;
     $postTitle = $_POST['postTitle'] ?? '';
     $postContent = $_POST['postContent'] ?? '';
-    $postTag = '';
+    if (empty($postTitle) || empty($postContent)) {
+        echo 'Post title or content cannot be empty.';
+        exit;  // 
+    }
 
+    $postTag = '';
     if (preg_match('/#(\w+)/', $postContent, $matches)) {
         $postTag = $matches[0];
     }
@@ -31,8 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
         }
-
-        echo "<script>alert('Post saved successfully!'); window.location='main.php';</script>";
+        echo "success";
     } else {
         echo "Error: " . $stmt->error;
     }

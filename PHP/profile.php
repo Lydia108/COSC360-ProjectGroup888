@@ -72,6 +72,7 @@ exit();
                     title="Change Avatar" id="avatarImage" />
             </a>
             <input type="file" id="fileInput" name="avatar" style="display: none;" />
+            <p class="hint">(You may change your avatar by clicking it.)</p>
         </span>
         <script>
         document.getElementById('avatarImage').addEventListener('click', function() {
@@ -140,16 +141,7 @@ exit();
                     class="comment">Commented</button>
             </legend>
             <div class="content">
-
-                <img src="../Images/test.jpg">
-                <p class="title">hello!</p>
-
-                <img src="../Images/test.jpg">
-                <p class="title">hello!</p>
-
-                <img src="../Images/test.jpg">
-                <p class="title">hello!</p>
-
+                <p class="title">Still developing here!</p>
 
             </div>
         </fieldset>
