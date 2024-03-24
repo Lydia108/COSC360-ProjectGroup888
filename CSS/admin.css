@@ -1,11 +1,32 @@
-#deleteUser{
+#deleteUser {
     border-radius: 15px;
     padding: 10px 15px;
     width: 200px;
     background-color: #f3cd4f;
     font-size: 22px;
+    cursor:pointer;
+    font-weight:bold;
 }
-#deleteUser:hover{
+
+#deleteUser:hover {
     filter: brightness(0.9);
     color: white;
+    cursor:pointer;
+
+}
+#deletePost {
+    border-radius: 15px;
+    padding: 10px 15px;
+    width: 200px;
+    background-color: #f3cd4f;
+    font-size: 22px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+#deletePost:hover {
+    filter: brightness(0.9);
+    color: white;
+    cursor:pointer;
+
 }

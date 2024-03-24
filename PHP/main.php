@@ -115,7 +115,10 @@ if (isset($_SESSION['user_id'])) {
         echo "No user found.";
     }
     $stmt->close();
-} 
+} else {
+    header("Location: login.php");
+    exit();
+}
 
 ?>
 <!-- post and picture-->

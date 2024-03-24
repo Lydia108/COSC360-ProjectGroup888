@@ -125,6 +125,9 @@ if ($_SESSION['is_guest']== 'true') {
         echo "No user found.";
     }
     $stmt->close();
+} else{
+    header("Location: login.php");
+    exit();
 } 
 
 
@@ -279,7 +282,7 @@ if ($postId > 0) {
         <img src="<?= $picture ?>" alt="Post image" style="cursor: pointer;"
             onclick="showImageFullScreen('<?= $picture ?>')">
         <?php endforeach; ?>
-        
+
         <?php if(!$isGuest): ?>
         <button id="comment"><i class='far fa-comment-alt'></i></button>
         <?php endif; ?>
@@ -288,22 +291,22 @@ if ($postId > 0) {
 
     </div>
     <div id="fullscreen-overlay" style="display: none;">
-            <img id="fullscreen-image" src="" alt="Full Screen Image">
-        </div>
+        <img id="fullscreen-image" src="" alt="Full Screen Image">
+    </div>
 
-        <script>
-        function showImageFullScreen(imageSrc) {
-            var overlay = document.getElementById('fullscreen-overlay');
-            var image = document.getElementById('fullscreen-image');
+    <script>
+    function showImageFullScreen(imageSrc) {
+        var overlay = document.getElementById('fullscreen-overlay');
+        var image = document.getElementById('fullscreen-image');
 
-            image.src = imageSrc;
-            overlay.style.display = 'flex';
+        image.src = imageSrc;
+        overlay.style.display = 'flex';
 
-            overlay.onclick = function() {
-                overlay.style.display = 'none';
-            };
-        }
-        </script>
+        overlay.onclick = function() {
+            overlay.style.display = 'none';
+        };
+    }
+    </script>
     <?php if(!$isGuest): ?>
     <div class="separate">
         <hr>

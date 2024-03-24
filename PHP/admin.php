@@ -1,7 +1,14 @@
 <?php
 session_start();
-include 'connection.php'; // Ensure this file has the database connection details
-if (!isset($_SESSION['user_id']) || $_SESSION['userType'] != '1') {
+include 'connection.php'; 
+// Check logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Check admin
+if ($_SESSION['userType'] != '1') {
     header("Location: main.php");
     exit();
 }
