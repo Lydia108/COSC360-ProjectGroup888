@@ -103,7 +103,6 @@ exit();
         });
     });
     </script>
-
     <div class="post">
         <input class="title" placeholder="Edit title..." />
         <br>

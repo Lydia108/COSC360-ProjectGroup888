@@ -191,6 +191,8 @@ if ($postId > 0) {
 <!-- comment -->
 <?php
 include 'connection.php'; 
+//toggle textarea
+$isUserIdSet = isset($_SESSION['user_id']) && $_SESSION['user_id'] != '';
 $postId = isset($_GET['postId']) ? intval($_GET['postId']) : 0;
 if ($postId > 0) {
     $commentsQuery = "SELECT c.*, u.firstName, u.lastName, u.icon 
@@ -292,20 +294,42 @@ if ($postId > 0) {
     <div id="fullscreen-overlay" style="display: none;">
         <img id="fullscreen-image" src="" alt="Full Screen Image">
     </div>
-
+    <!-- zoom in  -->
     <script>
     function showImageFullScreen(imageSrc) {
         var overlay = document.getElementById('fullscreen-overlay');
         var image = document.getElementById('fullscreen-image');
+        var maxWidth = 1000; // 
+        var maxHeight = 800; // 
 
-        image.src = imageSrc;
-        overlay.style.display = 'flex';
-
-        overlay.onclick = function() {
-            overlay.style.display = 'none';
+        var tempImage = new Image();
+        tempImage.src = imageSrc;
+        tempImage.onload = function() {
+            var originalWidth = tempImage.width;
+            var originalHeight = tempImage.height;
+            var newWidth = originalWidth;
+            var newHeight = originalHeight;
+            if (originalWidth > maxWidth || originalHeight > maxHeight) {
+                if (originalWidth / maxWidth > originalHeight / maxHeight) {
+                    newWidth = maxWidth;
+                    newHeight = Math.round(maxWidth * originalHeight / originalWidth);
+                } else {
+                    newHeight = maxHeight;
+                    newWidth = Math.round(maxHeight * originalWidth / originalHeight);
+                }
+            }
+            image.src = imageSrc;
+            image.style.width = newWidth + 'px';
+            image.style.height = newHeight + 'px';
+            overlay.style.display = 'flex';
+            image.style.borderRadius = '15px';  
+            overlay.onclick = function() {
+                overlay.style.display = 'none';
+            };
         };
     }
     </script>
+
     <?php if(!$isGuest): ?>
     <div class="separate">
         <hr>
@@ -320,8 +344,30 @@ if ($postId > 0) {
     </div>
     <?php endif; ?>
     <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const navBarButtons = document.querySelectorAll('.navBar button');
+        const textarea = document.querySelector('#autoresizing');
+        navBarButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const currentText = textarea.value;
+                if (currentText.includes('#')) {
+                    alert('You can only add one tag.');
+                } else {
+                    const tagText = `#${this.textContent}# `;
+                    textarea.value = `${currentText} ${tagText}`;
+                }
+            });
+        });
+    });
+    </script>
+    <script>
     $(document).ready(function() {
-        $('.addComment').hide();
+        <?php if($isUserIdSet): ?>
+        $('.addComment').show(); // default showing textare
+        <?php else: ?>
+        $('.addComment').hide(); // hide
+        <?php endif; ?>
+
         $('#comment').click(function() {
             $('.addComment').toggle();
         });
@@ -373,7 +419,7 @@ if ($postId > 0) {
             event.preventDefault(); // 
             var comment = $('#autoresizing').val(); // 
             var postId = <?= $postId; ?>; // 
-            // 确保评论不为空
+            // 
             if (comment.trim() === '') {
                 alert('Please enter a comment.');
                 return;
@@ -387,7 +433,6 @@ if ($postId > 0) {
                     postId: postId
                 },
                 success: function(data) {
-                    alert('Comment posted successfully!');
                     $('#autoresizing').val('');
                     $('.commentsList ul').append(data);
                     window.location.reload(true);

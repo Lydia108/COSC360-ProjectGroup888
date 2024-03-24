@@ -171,7 +171,7 @@ if ($postsResult->num_rows > 0) {
                 <?php if($_SESSION['is_guest'] == 'true') : ?>
                 <button id="guestLogin" onclick="window.location.href='signup.php'">Sign up</button>
                 <?php else: ?>
-                <a href="profile.php">My profile</a>
+                <a href="profile.php">My Profile</a>
                 <?php endif; ?>
                 <img src="<?php echo $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
                     id="avatarImage" />

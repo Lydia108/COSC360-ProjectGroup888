@@ -253,7 +253,12 @@ button#comment:hover {
     width: 100%;
 }
 
+.addComment {
+    display: block;
+}
+
 .addComment textarea {
+    display: block;
     overflow-y: hidden;
     resize: both;
     margin-left: 50px;
@@ -268,6 +273,7 @@ button#comment:hover {
     font-family: Arial, sans-serif;
     font-size: 16px;
 }
+
 
 #submitComment {
     /* float: right; */
