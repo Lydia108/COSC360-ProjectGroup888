@@ -470,7 +470,7 @@ input {
     position: fixed;
     bottom: 15px;
     right: 10px;
-    z-index: 9999999999999999999;
+    z-index: 9999;
     font-size: 18px;
     border: none;
     outline: none;

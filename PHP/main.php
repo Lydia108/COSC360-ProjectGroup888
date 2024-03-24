@@ -89,8 +89,7 @@ include 'connection.php';
 if($_SESSION['is_guest'] == 'true') {
     $welcomeMessage = "Welcome to Bloggie";
      $iconData = ''; 
-} 
-if (isset($_SESSION['user_id'])) {
+}else if (isset($_SESSION['user_id'])) {
     $_SESSION['is_guest'] = false; 
     $userId = $_SESSION['user_id'];
     $stmt = $conn->prepare("SELECT firstName, lastName, emailAddress, icon, userType FROM user WHERE userId = ?");
@@ -246,7 +245,6 @@ if ($postsResult->num_rows > 0) {
         <button>Travel</button>
         <button>Health&Fitness</button>
         <button>Gastronomy</button>
-        <button>Personal</button>
         <button>Career</button>
         <button>Arts&Culture</button>
 

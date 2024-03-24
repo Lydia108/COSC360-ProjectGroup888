@@ -82,7 +82,6 @@ exit();
         <button>Travel</button>
         <button>Health&Fitness</button>
         <button>Gastronomy</button>
-        <button>Personal</button>
         <button>Career</button>
         <button>Arts&Culture</button>
 

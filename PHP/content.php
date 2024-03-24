@@ -125,7 +125,7 @@ if ($_SESSION['is_guest']== 'true') {
         echo "No user found.";
     }
     $stmt->close();
-} else{
+} else {
     header("Location: login.php");
     exit();
 } 
@@ -263,7 +263,6 @@ if ($postId > 0) {
         <button>Travel</button>
         <button>Health&Fitness</button>
         <button>Gastronomy</button>
-        <button>Personal</button>
         <button>Career</button>
         <button>Arts&Culture</button>
     </div>
