@@ -103,22 +103,28 @@ exit();
         });
     });
     </script>
+
     <div class="post">
         <input class="title" placeholder="Edit title..." />
         <br>
         <textarea class="context" placeholder="Enter text..."></textarea>
-
+        <p class="hint">You should upload all the images you want at once.<span style="color:red;">*</span></p>
         <img id="imagePreview" alt="Image preview" />
         <div class="upload-row">
             <button class="photo" onclick="document.getElementById('imageUpload').click();">
-                <i class="fa-regular fa-image" id="symbol"></i>
+                <i class="fa-regular fa-image" id="symbol" onclick="hideHint()"></i>
             </button>
             <div id="previewContainer"></div>
             <button class="submit">Post now</button>
         </div>
         <input type="file" id="imageUpload" accept="image/*" multiple style="display: none;" />
-
     </div>
+    <script>
+    function hideHint() {
+        document.querySelector('.hint').style.display = 'none';
+    }
+    </script>
+
     <div class="site-footer">
         <footer class="app">Bloggie</footer>
         <footer class="intro">The simplest way to connect with others through questions and answers.</footer>
@@ -132,6 +138,7 @@ exit();
         <footer class="copyright">&copy; 2024 Bloggie. All rights reserved.</footer>
 
     </div>
+
     <script>
     $(document).ready(function() {
         $('.submit').click(function(event) {
@@ -154,8 +161,11 @@ exit();
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    alert('Post submitted successfully.');
-                    window.location.href = 'main.php';
+                    if (data.trim() === 'success') {
+                        window.location.href = 'main.php';
+                    } else {
+                        alert(data);
+                    }
                 },
                 error: function() {
                     alert('Error submitting the post.');
@@ -165,6 +175,7 @@ exit();
 
     });
     </script>
+
     <script>
     document.getElementById('imageUpload').addEventListener('change', function(event) {
         const files = event.target.files;

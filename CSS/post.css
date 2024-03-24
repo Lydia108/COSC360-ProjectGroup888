@@ -363,11 +363,15 @@ input {
     align-items: center;
     gap: 20px;
 }
+.hint {
+    font-weight: bold;
+    margin-left: 30px;
+}
 
 #previewContainer {
     display: flex;
     flex-wrap: nowrap;
-    gap: 30px;
+    gap: 20px;
     align-items: center;
     overflow-x: auto;
     margin-top: 5px;
@@ -381,9 +385,6 @@ input {
     border: 1px solid #ccc;
     cursor: pointer;
     transition: all 0.3s ease;
-    /* 平滑过渡效果 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    /* 添加基本阴影 */
 }
 
 .preview-img:hover {

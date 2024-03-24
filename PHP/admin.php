@@ -62,30 +62,31 @@ if ($result->num_rows > 0) {
         width: 200px;
         background-color: #f3cd4f;
         font-size: 22px;
-        cursor:pointer;
-        font-weight:bold;
+        cursor: pointer;
+        font-weight: bold;
     }
 
     #deleteUser:hover {
         filter: brightness(0.9);
         color: white;
-        cursor:pointer;
+        cursor: pointer;
 
     }
+
     #deletePost {
         border-radius: 15px;
         padding: 10px 15px;
         width: 200px;
         background-color: #f3cd4f;
         font-size: 22px;
-        cursor:pointer;
-        font-weight:bold;
+        cursor: pointer;
+        font-weight: bold;
     }
 
     #deletePost:hover {
         filter: brightness(0.9);
         color: white;
-        cursor:pointer;
+        cursor: pointer;
 
     }
     </style>
@@ -102,9 +103,11 @@ if ($result->num_rows > 0) {
             deleteButton.style.display = 'none';
         }
     }
-    function deletePostVisibility(){
+
+    function deletePostVisibility() {
         alert("Still developing...");
     }
+
     function deleteSelected() {
         var checkboxes = document.getElementsByName('delete_checkbox');
         var selectedIds = [];
@@ -119,11 +122,9 @@ if ($result->num_rows > 0) {
             window.location.href = 'admin.php?delete=' + selectedIds.join(',');
         }
     }
-
     function selectAllCheckboxes() {
         var checkboxes = document.getElementsByName('delete_checkbox');
         var selectAllCheckbox = document.getElementById('selectAll');
-
         for (var i = 0; i < checkboxes.length; i++) {
             checkboxes[i].checked = selectAllCheckbox.checked;
         }
@@ -141,23 +142,20 @@ if ($result->num_rows > 0) {
             <tr>
                 <th><input type="checkbox" id="selectAll" title="select all" onchange="selectAllCheckboxes()"></th>
                 <th>User ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
+                <th>Full Name</th>
                 <th>Email Address</th>
-                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($users as $user) : ?>
+            <?php if ($user['userId'] != $_SESSION['user_id']) : ?>
             <tr>
                 <td><input type="checkbox" name="delete_checkbox" value="<?php echo $user['userId']; ?>"></td>
                 <td><?php echo $user['userId']; ?></td>
-                <td><?php echo $user['firstName']; ?></td>
-                <td><?php echo $user['lastName']; ?></td>
+                <td><?php echo $user['firstName']." ".$user['lastName'] ; ?></td>
                 <td><?php echo $user['emailAddress']; ?></td>
-                <td><a href="admin.php?delete=<?php echo $user['userId']; ?>"
-                        onclick="return confirm('Are you sure you want to delete this user?');">Delete</a></td>
             </tr>
+            <?php endif; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
