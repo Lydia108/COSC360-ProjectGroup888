@@ -1,0 +1,11 @@
+#deleteUser{
+    border-radius: 15px;
+    padding: 10px 15px;
+    width: 200px;
+    background-color: #f3cd4f;
+    font-size: 22px;
+}
+#deleteUser:hover{
+    filter: brightness(0.9);
+    color: white;
+}
