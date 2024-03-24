@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $newUserId = $conn->insert_id;
         $_SESSION['user_id'] = $newUserId; 
         unset($_SESSION['is_guest']); 
-        header("Location: main.php");
+        header("Location: login.php");
         exit();
     } else {
         echo "Error: " . $stmt->error;

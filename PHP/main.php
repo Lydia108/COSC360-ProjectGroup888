@@ -85,20 +85,15 @@
 <?php
 session_start();
 include 'connection.php';
-if (isset($_GET['guest']) && $_GET['guest'] == 'true') {
-    $_SESSION['is_guest'] = true;
-    unset($_SESSION['user_id']); 
-    header("Location: main.php");
-    exit();
-}
 // check guest
-if (isset($_SESSION['is_guest']) && $_SESSION['is_guest']) {
+if($_SESSION['is_guest'] == 'true') {
     $welcomeMessage = "Welcome to Bloggie";
-    $iconData = ''; 
-} else if (isset($_SESSION['user_id'])) {
-    unset($_SESSION['is_guest']); 
+     $iconData = ''; 
+} 
+if (isset($_SESSION['user_id'])) {
+    $_SESSION['is_guest'] = false; 
     $userId = $_SESSION['user_id'];
-    $stmt = $conn->prepare("SELECT firstName, lastName, emailAddress, icon FROM user WHERE userId = ?");
+    $stmt = $conn->prepare("SELECT firstName, lastName, emailAddress, icon, userType FROM user WHERE userId = ?");
     $stmt->bind_param("i", $userId); 
     $stmt->execute();
     $result = $stmt->get_result();
@@ -113,14 +108,14 @@ if (isset($_SESSION['is_guest']) && $_SESSION['is_guest']) {
         } else {
             $iconData = ''; 
         }
+        if ( $user['userType'] == 1) {
+            echo "admin";
+        }        
     } else {
         echo "No user found.";
     }
     $stmt->close();
-} else {
-    header("Location: login.php");
-    exit();
-}
+} 
 
 ?>
 <!-- post and picture-->
@@ -165,13 +160,13 @@ if ($postsResult->num_rows > 0) {
         </div>
         <div class="actions">
             <!-- if guest then switch makePost with login -->
-            <?php if (isset($_SESSION['is_guest']) && $_SESSION['is_guest'] === true): ?>
+            <?php if($_SESSION['is_guest'] == 'true') : ?>
             <button id="guestLogin" onclick="window.location.href='login.php'">Log in</button>
             <?php elseif(isset($_SESSION['user_id'])): ?>
             <a href="post.php">Make Post</a>
             <?php endif; ?>
             <div class="info">
-                <?php if (isset($_SESSION['is_guest']) && $_SESSION['is_guest'] === true): ?>
+                <?php if($_SESSION['is_guest'] == 'true') : ?>
                 <button id="guestLogin" onclick="window.location.href='signup.php'">Sign up</button>
                 <?php else: ?>
                 <a href="profile.php">My profile</a>
@@ -179,18 +174,24 @@ if ($postsResult->num_rows > 0) {
                 <img src="<?php echo $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
                     id="avatarImage" />
                 <!-- if guest then hide div -->
-                <?php if (!isset($_SESSION['is_guest']) || $_SESSION['is_guest'] !== true): ?>
+                <?php if (!($_SESSION['is_guest'] == 'true')): ?>
                 <div class="dropdown-content">
                     <a href="profile.php">Profile</a>
                     <a href="logout.php">Logout</a>
+                    <?php 
+                    if ($_SESSION['userType'] == 1): ?>
+                    <a href="admin.php">Admin</a>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
+
                 <?php
-                if (isset($_SESSION['is_guest']) && $_SESSION['is_guest'] === true) {
+                if ($_SESSION['is_guest'] == 'true') {
                     echo "<div class='ses'>Welcome to Bloggie</div>"; 
                 } elseif (isset($_SESSION['user_id'])) { 
+
                     $userId = $_SESSION['user_id'];
-                echo "<div class='ses'>Welcome, " . $firstName . " " . $lastName . "</div>"; // 
+                    echo "<div class='ses'>Welcome, " . $firstName . " " . $lastName . "</div>"; // 
                 } else {
                     header("Location: login.php"); 
                     exit();
@@ -203,7 +204,7 @@ if ($postsResult->num_rows > 0) {
     <div class="post" title="Click for more details"
         onclick="window.location.href='content.php?postId=<?= $row['postId']; ?>';">
         <p class="title"><?= htmlspecialchars($row['postTitle']); ?></p>
-        
+
         <img src="<?= $row['firstPicture'] ?>" alt="Post image"
             style="max-width: 600px; height: 70%; object-fit:cover;">
         <div class="context">
@@ -220,7 +221,7 @@ if ($postsResult->num_rows > 0) {
             <a href="#" title="Unlike"><i class='fas fa-thumbs-up' id="thumbsup1" style="display:none;"
                     onclick="toggleLike(event, this)"></i></a>
         </div>
-       
+
 
     </div>
     <?php endforeach; ?>

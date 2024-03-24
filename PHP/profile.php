@@ -215,6 +215,7 @@ exit();
                     document.getElementById('editButton').textContent = 'Edit';
                     isEditing = false;
                     alert("Profile updated successfully!");
+                    location.reload();
                 } else {
                     console.error('Failed to update profile.');
                 }

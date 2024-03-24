@@ -98,18 +98,13 @@
 <?php
 session_start();
 include 'connection.php';
-if (isset($_GET['guest']) && $_GET['guest'] == 'true') {
-    $_SESSION['is_guest'] = true;
-    unset($_SESSION['user_id']); 
-    header("Location: main.php");
-    exit();
-}
+
 // check guest
-if (isset($_SESSION['is_guest']) && $_SESSION['is_guest']) {
-    $welcomeMessage = "Welcome to Bloggie";
+if ($_SESSION['is_guest']== 'true') {
+    $welcomeMessage = "";
     $iconData = ''; 
 } else if (isset($_SESSION['user_id'])) {
-    unset($_SESSION['is_guest']); 
+    $_SESSION['is_guest'] = false; 
     $userId = $_SESSION['user_id'];
     $stmt = $conn->prepare("SELECT firstName, lastName, emailAddress, icon FROM user WHERE userId = ?");
     $stmt->bind_param("i", $userId); 
@@ -130,10 +125,8 @@ if (isset($_SESSION['is_guest']) && $_SESSION['is_guest']) {
         echo "No user found.";
     }
     $stmt->close();
-} else {
-    header("Location: login.php");
-    exit();
-}
+} 
+
 
 ?>
 <!-- content -->
@@ -142,11 +135,11 @@ include 'connection.php';
 $isGuest = isset($_SESSION['is_guest']) && $_SESSION['is_guest'] == true;
 $firstName = "Guest";
 $lastName = "";
-$iconData = ''; // 
+$iconData2 = ''; // 
 
 if (!$isGuest) {
     if (isset($_SESSION['user_id'])) {
-        unset($_SESSION['is_guest']); 
+        $_SESSION['is_guest'] = false; 
         $userId = $_SESSION['user_id'];
         $stmt = $conn->prepare("SELECT firstName, lastName, emailAddress, icon FROM user WHERE userId = ?");
         $stmt->bind_param("i", $userId); 
@@ -157,15 +150,12 @@ if (!$isGuest) {
             $user = $result->fetch_assoc();
             $firstName = htmlspecialchars($user['firstName']);
             $lastName = htmlspecialchars($user['lastName']);
-            $iconData = $user['icon'] ? 'data:image/jpeg;base64,' . base64_encode($user['icon']) : '';
+            $iconData2 = $user['icon'] ? 'data:image/jpeg;base64,' . base64_encode($user['icon']) : '';
         } else {
             echo "No user found.";
         }
         $stmt->close();
-    } else {
-        header("Location: login.php");
-        exit();
-    }
+    } 
 }
 
 $postId = isset($_GET['postId']) ? intval($_GET['postId']) : 0;
@@ -217,6 +207,7 @@ if ($postId > 0) {
     $conn->close();
 }
 ?>
+
 <body>
     <a href="#top" id="backToTopButton" title="Go to top"> TOP </a>
     <div class="sidebar">
@@ -226,18 +217,19 @@ if ($postId > 0) {
             <i class="fa fa-search"></i>
         </div>
         <div class="actions">
-            <?php if (isset($_SESSION['is_guest']) && $_SESSION['is_guest'] === true): ?>
+            <?php if (isset($_SESSION['is_guest']) && $_SESSION['is_guest'] == true): ?>
             <button id="guestLogin" onclick="window.location.href='login.php'">Log in</button>
             <?php else: ?>
             <a href="post.php">Make Post</a>
             <?php endif; ?>
             <div class="info">
-                <?php if (isset($_SESSION['is_guest']) && $_SESSION['is_guest'] === true): ?>
+                <?php if (isset($_SESSION['is_guest']) && $_SESSION['is_guest'] == true): ?>
                 <button id="guestLogin" onclick="window.location.href='signup.php'">Sign up</button>
                 <?php else: ?>
                 <a href="profile.php">My profile</a>
                 <?php endif; ?>
-                <img src="<?= $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>" id="avatarImage" />
+                <img src="<?= $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
+                    id="avatarImage" />
                 <!-- if guest then hide div -->
                 <?php if (!isset($_SESSION['is_guest']) || $_SESSION['is_guest'] !== true): ?>
                 <div class="dropdown-content">
@@ -246,7 +238,7 @@ if ($postId > 0) {
                 </div>
                 <?php endif; ?>
                 <?php
-                if (isset($_SESSION['is_guest']) && $_SESSION['is_guest'] === true) {
+                if (isset($_SESSION['is_guest']) && $_SESSION['is_guest'] == true) {
                     echo "<div class='ses'>Welcome to Bloggie</div>"; 
                 } elseif (isset($_SESSION['user_id'])) { 
                     $userId = $_SESSION['user_id'];
@@ -284,8 +276,10 @@ if ($postId > 0) {
         <p class="context"><?= nl2br(htmlspecialchars($post['postContent'])); ?></p>
         <!-- Display all images -->
         <?php foreach ($pictures as $picture): ?>
-        <img src="<?= $picture ?>" alt="Post image" style="max-width: 100%; margin-top: 10px;">
+        <img src="<?= $picture ?>" alt="Post image" style="cursor: pointer;"
+            onclick="showImageFullScreen('<?= $picture ?>')">
         <?php endforeach; ?>
+        
         <?php if(!$isGuest): ?>
         <button id="comment"><i class='far fa-comment-alt'></i></button>
         <?php endif; ?>
@@ -293,6 +287,23 @@ if ($postId > 0) {
         <a href="#"><i class='fas fa-thumbs-up' id="thumbsup1" style="display:none;" onclick="toggleLike()"></i></a> -->
 
     </div>
+    <div id="fullscreen-overlay" style="display: none;">
+            <img id="fullscreen-image" src="" alt="Full Screen Image">
+        </div>
+
+        <script>
+        function showImageFullScreen(imageSrc) {
+            var overlay = document.getElementById('fullscreen-overlay');
+            var image = document.getElementById('fullscreen-image');
+
+            image.src = imageSrc;
+            overlay.style.display = 'flex';
+
+            overlay.onclick = function() {
+                overlay.style.display = 'none';
+            };
+        }
+        </script>
     <?php if(!$isGuest): ?>
     <div class="separate">
         <hr>

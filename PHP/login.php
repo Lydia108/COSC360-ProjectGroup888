@@ -95,7 +95,8 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']) {
     exit();
 }
 
-if (isset($_GET['guest']) && $_GET['guest'] === 'true') {
+if (isset($_GET['guest']) && $_GET['guest'] == true) {
+    echo "<script>console.log('hello');</script>";
     $_SESSION['is_guest'] = true;
     header('Location: main.php');
     exit();
@@ -111,6 +112,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $row = mysqli_fetch_assoc($results);
         $_SESSION['user_id'] = $row['userId'];
         $_SESSION['logged_in'] = true; // 
+        $_SESSION['is_guest'] = false; // 
+        $_SESSION['userType'] = $row['userType']; // 
+
         header("Location: main.php");
         exit();
     } else {
@@ -156,12 +160,12 @@ if (isset($_SESSION['error_message'])) {
                 <button id="loginAsGuest">Login as a guest</button>
                 <script>
                 document.getElementById('loginAsGuest').addEventListener('click', function() {
-                    window.location.href = 'login.php?guest=true'; // guest
+                    window.location.href = 'login.php?guest=true'; // Directly redirect to main.php
                 });
                 </script>
 
             </div>
-            <button type="submit" id="guest">Sign in</button>
+            <button type="submit" id="name">Sign in</button>
         </form>
         <p id="error-message" style="color: red; text-align:center;"></p>
     </div>
