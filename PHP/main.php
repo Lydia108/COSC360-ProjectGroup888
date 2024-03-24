@@ -250,17 +250,22 @@ if ($postsResult->num_rows > 0) {
 
     </div>
 
-    <div class="site-footer">
-        <footer class="app">Bloggie</footer>
-        <footer class="intro">The simplest way to connect with others through questions and answers.</footer>
-        <footer class="contact">Stay contact with us:</footer>
-        <footer class="icon">
-            <img src="../Images/linkedin.png" />
-            <img src="../Images/x.webp" />
-            <img src="../Images/ins.webp" />
-        </footer>
-        <footer class="copyright">&copy; 2024 Bloggie. All rights reserved.</footer>
-    </div>
+    <?php 
+    // Check if posts exist
+    if (!empty($posts)): 
+    ?>
+        <div class="site-footer">
+            <footer class="app">Bloggie</footer>
+            <footer class="intro">The simplest way to connect with others through questions and answers.</footer>
+            <footer class="contact">Stay contact with us:</footer>
+            <footer class="icon">
+                <img src="../Images/linkedin.png" />
+                <img src="../Images/x.webp" />
+                <img src="../Images/ins.webp" />
+            </footer>
+            <footer class="copyright">&copy; 2024 Bloggie. All rights reserved.</footer>
+        </div>
+    <?php endif; ?>
 </body>
 
 </html>

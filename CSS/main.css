@@ -331,6 +331,9 @@ body {
     border-radius: 10px;
     padding: 20px 20px;
     margin-right: 50px;
+    margin-bottom: 1px;
+    position: sticky;
+    
 }
 
 .site-footer .app {
