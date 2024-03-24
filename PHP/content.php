@@ -9,11 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://kit.fontawesome.com/d1344ce34d.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/0485a9f289.js" crossorigin="anonymous"></script>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
-
     <script>
     window.onscroll = function() {
         scrollFunction()
@@ -49,70 +46,134 @@
         }
 
     }
-        const textarea = document.getElementById('autoresizing');
-        textarea.addEventListener('input', function() {
-            this.style.height = 'auto'; 
-            this.style.height = this.scrollHeight + 'px'; 
-        });
+    const textarea = document.getElementById('autoresizing');
+    textarea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = this.scrollHeight + 'px';
+    });
     </script>
+    <canvas id="canvas"></canvas>
+    <script>
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
 
-    <style>
-    .dynamic-button {
-        margin-right: 10px;
-        padding: 5px 10px;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    var particles = [];
+    for (var i = 0; i < 100; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 5 + 1,
+            color: 'white',
+            speedX: (Math.random() - 0.5) * 2,
+            speedY: (Math.random() - 0.5) * 2
+        });
     }
-    </style>
 
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(function(p) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+
+            p.x += p.speedX;
+            p.y += p.speedY;
+
+            if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+        });
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+    </script>
 
 </head>
 <!-- profile -->
 <?php
 session_start();
-include 'connection.php'; 
-if (isset($_SESSION['user_id'])) {
+include 'connection.php';
+
+// check guest
+if ($_SESSION['is_guest']== 'true') {
+    $welcomeMessage = "";
+    $iconData = ''; 
+} else if (isset($_SESSION['user_id'])) {
+    $_SESSION['is_guest'] = false; 
     $userId = $_SESSION['user_id'];
     $stmt = $conn->prepare("SELECT firstName, lastName, emailAddress, icon FROM user WHERE userId = ?");
-    $stmt->bind_param("i", $userId); // 'i' indicates the type is integer
+    $stmt->bind_param("i", $userId); 
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         $firstName = htmlspecialchars($user['firstName']);
         $lastName = htmlspecialchars($user['lastName']);
+        $welcomeMessage = "Welcome, " . $firstName . " " . $lastName; 
         if ($user['icon']) {
             $iconData = base64_encode($user['icon']);
         } else {
             $iconData = ''; 
-        }   // Convert the icon data to a data URI
+        }
     } else {
         echo "No user found.";
     }
     $stmt->close();
-} else {
-    header("Location: login.php");
-    exit();
-}
+} 
+
+
 ?>
 <!-- content -->
 <?php
-include 'connection.php'; 
+include 'connection.php';
+$isGuest = isset($_SESSION['is_guest']) && $_SESSION['is_guest'] == true;
+$firstName = "Guest";
+$lastName = "";
+$iconData2 = ''; // 
+
+if (!$isGuest) {
+    if (isset($_SESSION['user_id'])) {
+        $_SESSION['is_guest'] = false; 
+        $userId = $_SESSION['user_id'];
+        $stmt = $conn->prepare("SELECT firstName, lastName, emailAddress, icon FROM user WHERE userId = ?");
+        $stmt->bind_param("i", $userId); 
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+            $firstName = htmlspecialchars($user['firstName']);
+            $lastName = htmlspecialchars($user['lastName']);
+            $iconData2 = $user['icon'] ? 'data:image/jpeg;base64,' . base64_encode($user['icon']) : '';
+        } else {
+            echo "No user found.";
+        }
+        $stmt->close();
+    } 
+}
 
 $postId = isset($_GET['postId']) ? intval($_GET['postId']) : 0;
-
+$pictures = [];
 if ($postId > 0) {
     $stmt = $conn->prepare("SELECT p.*, u.firstName, u.lastName, u.icon FROM post p INNER JOIN user u ON p.postUserId = u.userId WHERE p.postId = ?");
     $stmt->bind_param("i", $postId);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if ($post = $result->fetch_assoc()) {
+    if ($result->num_rows > 0) {
+        $post = $result->fetch_assoc();
         // Retrieve all pictures
         $pictureStmt = $conn->prepare("SELECT postPicture FROM picture WHERE postId = ?");
         $pictureStmt->bind_param("i", $postId);
         $pictureStmt->execute();
         $pictureResult = $pictureStmt->get_result();
-        $pictures = [];
+        
         while ($pictureRow = $pictureResult->fetch_assoc()) {
             $pictures[] = 'data:image/jpeg;base64,' . base64_encode($pictureRow['postPicture']);
         }
@@ -122,10 +183,6 @@ if ($postId > 0) {
         exit();
     }
     $stmt->close();
-    $conn->close();
-} else {
-    echo "Invalid post ID.";
-    exit();
 }
 ?>
 <!-- comment -->
@@ -160,25 +217,37 @@ if ($postId > 0) {
             <i class="fa fa-search"></i>
         </div>
         <div class="actions">
+            <?php if (isset($_SESSION['is_guest']) && $_SESSION['is_guest'] == true): ?>
+            <button id="guestLogin" onclick="window.location.href='login.php'">Log in</button>
+            <?php else: ?>
             <a href="post.php">Make Post</a>
+            <?php endif; ?>
             <div class="info">
-                <a href="profile.php">My Profile</a>
-                <img src="<?php echo $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
+                <?php if (isset($_SESSION['is_guest']) && $_SESSION['is_guest'] == true): ?>
+                <button id="guestLogin" onclick="window.location.href='signup.php'">Sign up</button>
+                <?php else: ?>
+                <a href="profile.php">My profile</a>
+                <?php endif; ?>
+                <img src="<?= $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
                     id="avatarImage" />
+                <!-- if guest then hide div -->
+                <?php if (!isset($_SESSION['is_guest']) || $_SESSION['is_guest'] !== true): ?>
                 <div class="dropdown-content">
                     <a href="profile.php">Profile</a>
                     <a href="logout.php">Logout</a>
                 </div>
+                <?php endif; ?>
                 <?php
-if (isset($_SESSION['user_id'])) {
-$userId = $_SESSION['user_id'];
-
-echo "<div class='ses'>Welcome, " . $firstName . " " . $lastName . "</div>";
-} else {
-header("Location: login.php");
-exit();
-}
-?>
+                if (isset($_SESSION['is_guest']) && $_SESSION['is_guest'] == true) {
+                    echo "<div class='ses'>Welcome to Bloggie</div>"; 
+                } elseif (isset($_SESSION['user_id'])) { 
+                    $userId = $_SESSION['user_id'];
+                echo "<div class='ses'>Welcome, " . $firstName . " " . $lastName . "</div>"; // 
+                } else {
+                    header("Location: login.php"); 
+                    exit();
+                }
+                ?>
             </div>
         </div>
     </div>
@@ -207,21 +276,47 @@ exit();
         <p class="context"><?= nl2br(htmlspecialchars($post['postContent'])); ?></p>
         <!-- Display all images -->
         <?php foreach ($pictures as $picture): ?>
-        <img src="<?= $picture ?>" alt="Post image" style="max-width: 100%; margin-top: 10px;">
+        <img src="<?= $picture ?>" alt="Post image" style="cursor: pointer;"
+            onclick="showImageFullScreen('<?= $picture ?>')">
         <?php endforeach; ?>
+        
+        <?php if(!$isGuest): ?>
         <button id="comment"><i class='far fa-comment-alt'></i></button>
+        <?php endif; ?>
         <!-- <a href="#"><i class='far fa-thumbs-up' id="thumbsup" onclick="toggleLike()"></i></a>
         <a href="#"><i class='fas fa-thumbs-up' id="thumbsup1" style="display:none;" onclick="toggleLike()"></i></a> -->
 
     </div>
+    <div id="fullscreen-overlay" style="display: none;">
+            <img id="fullscreen-image" src="" alt="Full Screen Image">
+        </div>
+
+        <script>
+        function showImageFullScreen(imageSrc) {
+            var overlay = document.getElementById('fullscreen-overlay');
+            var image = document.getElementById('fullscreen-image');
+
+            image.src = imageSrc;
+            overlay.style.display = 'flex';
+
+            overlay.onclick = function() {
+                overlay.style.display = 'none';
+            };
+        }
+        </script>
+    <?php if(!$isGuest): ?>
     <div class="separate">
         <hr>
     </div>
+    <?php endif; ?>
+    <!-- guest hide -->
+    <?php if(!$isGuest): ?>
     <div class="addComment">
         <textarea placeholder="Comment something..." id="autoresizing"></textarea>
         <br>
         <button id="submitComment">Comment</button>
     </div>
+    <?php endif; ?>
     <script>
     $(document).ready(function() {
         $('.addComment').hide();
@@ -241,7 +336,8 @@ exit();
                 <img src="<?= $comment['icon'] ? 'data:image/jpeg;base64,' . base64_encode($comment['icon']) : '../Images/profile.jpg'; ?>"
                     alt="User Avatar" class="avatar">
                 <div class="contents">
-                    <span class="user"><?= htmlspecialchars($comment['firstName']) . " " . htmlspecialchars($comment['lastName']); ?>:</span>
+                    <span
+                        class="user"><?= htmlspecialchars($comment['firstName']) . " " . htmlspecialchars($comment['lastName']); ?>:</span>
                     <span class="dateTime"><i><?= htmlspecialchars($comment['postDate']); ?></i></span>
                     <br>
                     <span class="detail"><?= htmlspecialchars($comment['postComment']); ?></span>

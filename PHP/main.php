@@ -10,7 +10,57 @@
     <script src='https://www.w3schools.cn/fonts/kit/a076d05399.js'></script>
     <script src="https://kit.fontawesome.com/d1344ce34d.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/0485a9f289.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.5.1/dist/gsap.min.js"></script>
+    <script>
+    gsap.to("#backToTopButton", {
+        duration: 1,
+        opacity: 0.5,
+        y: -20,
+        yoyo: true,
+        repeat: -1,
+        ease: "power1.inOut"
+    });
+    </script>
+    <canvas id="canvas"></canvas>
+    <script>
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
 
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    var particles = [];
+    for (var i = 0; i < 100; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 5 + 1,
+            color: 'white',
+            speedX: (Math.random() - 0.5) * 2,
+            speedY: (Math.random() - 0.5) * 2
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(function(p) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+
+            p.x += p.speedX;
+            p.y += p.speedY;
+
+            if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+        });
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+    </script>
     <script>
     window.onscroll = function() {
         scrollFunction()
@@ -35,10 +85,16 @@
 <?php
 session_start();
 include 'connection.php';
+// check guest
+if($_SESSION['is_guest'] == 'true') {
+    $welcomeMessage = "Welcome to Bloggie";
+     $iconData = ''; 
+} 
 if (isset($_SESSION['user_id'])) {
+    $_SESSION['is_guest'] = false; 
     $userId = $_SESSION['user_id'];
-    $stmt = $conn->prepare("SELECT firstName, lastName, emailAddress, icon FROM user WHERE userId = ?");
-    $stmt->bind_param("i", $userId); // 'i' indicates the type is integer
+    $stmt = $conn->prepare("SELECT firstName, lastName, emailAddress, icon, userType FROM user WHERE userId = ?");
+    $stmt->bind_param("i", $userId); 
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -46,19 +102,21 @@ if (isset($_SESSION['user_id'])) {
         $user = $result->fetch_assoc();
         $firstName = htmlspecialchars($user['firstName']);
         $lastName = htmlspecialchars($user['lastName']);
+        $welcomeMessage = "Welcome, " . $firstName . " " . $lastName; 
         if ($user['icon']) {
             $iconData = base64_encode($user['icon']);
         } else {
-            $iconData = '';
-        }   // Convert the icon data to a data URI
+            $iconData = ''; 
+        }
+        if ( $user['userType'] == 1) {
+            echo "admin";
+        }        
     } else {
         echo "No user found.";
     }
     $stmt->close();
-} else {
-    header("Location: login.php");
-    exit();
-}
+} 
+
 ?>
 <!-- post and picture-->
 <?php
@@ -101,22 +159,41 @@ if ($postsResult->num_rows > 0) {
             <i class="fa fa-search"></i>
         </div>
         <div class="actions">
+            <!-- if guest then switch makePost with login -->
+            <?php if($_SESSION['is_guest'] == 'true') : ?>
+            <button id="guestLogin" onclick="window.location.href='login.php'">Log in</button>
+            <?php elseif(isset($_SESSION['user_id'])): ?>
             <a href="post.php">Make Post</a>
+            <?php endif; ?>
             <div class="info">
-                <a href="profile.php">My Profile</a>
+                <?php if($_SESSION['is_guest'] == 'true') : ?>
+                <button id="guestLogin" onclick="window.location.href='signup.php'">Sign up</button>
+                <?php else: ?>
+                <a href="profile.php">My profile</a>
+                <?php endif; ?>
                 <img src="<?php echo $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
                     id="avatarImage" />
+                <!-- if guest then hide div -->
+                <?php if (!($_SESSION['is_guest'] == 'true')): ?>
                 <div class="dropdown-content">
                     <a href="profile.php">Profile</a>
                     <a href="logout.php">Logout</a>
+                    <?php 
+                    if ($_SESSION['userType'] == 1): ?>
+                    <a href="admin.php">Admin</a>
+                    <?php endif; ?>
                 </div>
-                <?php
-                if (isset($_SESSION['user_id'])) {
-                    $userId = $_SESSION['user_id'];
+                <?php endif; ?>
 
-                    echo "<div class='ses'>Welcome, " . $firstName . " " . $lastName . "</div>";
+                <?php
+                if ($_SESSION['is_guest'] == 'true') {
+                    echo "<div class='ses'>Welcome to Bloggie</div>"; 
+                } elseif (isset($_SESSION['user_id'])) { 
+
+                    $userId = $_SESSION['user_id'];
+                    echo "<div class='ses'>Welcome, " . $firstName . " " . $lastName . "</div>"; // 
                 } else {
-                    header("Location: login.php");
+                    header("Location: login.php"); 
                     exit();
                 }
                 ?>
@@ -127,11 +204,13 @@ if ($postsResult->num_rows > 0) {
     <div class="post" title="Click for more details"
         onclick="window.location.href='content.php?postId=<?= $row['postId']; ?>';">
         <p class="title"><?= htmlspecialchars($row['postTitle']); ?></p>
+
         <img src="<?= $row['firstPicture'] ?>" alt="Post image"
             style="max-width: 600px; height: 70%; object-fit:cover;">
         <div class="context">
             <?= strlen($row['postContent']) > 500 ? substr(htmlspecialchars($row['postContent']), 0, 500) . "..." : htmlspecialchars($row['postContent']); ?>
         </div>
+
         <div class="user">
             <img src="<?= $row['icon'] ? 'data:image/jpeg;base64,' . base64_encode($row['icon']) : '../Images/profile.jpg'; ?>"
                 alt="User avatar" id="test" />
@@ -142,6 +221,8 @@ if ($postsResult->num_rows > 0) {
             <a href="#" title="Unlike"><i class='fas fa-thumbs-up' id="thumbsup1" style="display:none;"
                     onclick="toggleLike(event, this)"></i></a>
         </div>
+
+
     </div>
     <?php endforeach; ?>
     <script>
