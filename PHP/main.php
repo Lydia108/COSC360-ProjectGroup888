@@ -141,13 +141,13 @@ if ($postsResult->num_rows > 0) {
         if ($pictureRow = $pictureResult->fetch_assoc()) {
             $row['firstPicture'] = 'data:image/jpeg;base64,' . base64_encode($pictureRow['postPicture']);
         } else {
-            $row['firstPicture'] = '../Images/noImage.jpg';
+            $row['firstPicture'] = null; 
         }
         $posts[] = $row;
-        
     }
 }
 ?>
+
 
 
 <body>
@@ -206,13 +206,13 @@ if ($postsResult->num_rows > 0) {
     <div class="post" title="Click for more details"
         onclick="window.location.href='content.php?postId=<?= $row['postId']; ?>';">
         <p class="title"><?= htmlspecialchars($row['postTitle']); ?></p>
-
+        <?php if ($row['firstPicture'] !== null): ?>
         <img src="<?= $row['firstPicture'] ?>" alt="Post image"
             style="max-width: 600px; height: 70%; object-fit:cover;">
-        <div class="context">
-            <?= strlen($row['postContent']) > 500 ? substr(htmlspecialchars($row['postContent']), 0, 500) . "..." : htmlspecialchars($row['postContent']); ?>
+        <?php endif; ?>
+        <div class="context" <?php if ($row['firstPicture'] === null) echo 'style="width: 92%;"'; ?>>
+            <?= strlen($row['postContent']) > 300 ? substr(htmlspecialchars($row['postContent']), 0, 297) . "..." : htmlspecialchars($row['postContent']); ?>
         </div>
-
         <div class="user">
             <img src="<?= $row['icon'] ? 'data:image/jpeg;base64,' . base64_encode($row['icon']) : '../Images/profile.jpg'; ?>"
                 alt="User avatar" id="test" />
@@ -223,9 +223,8 @@ if ($postsResult->num_rows > 0) {
             <a href="#" title="Unlike"><i class='fas fa-thumbs-up' id="thumbsup1" style="display:none;"
                     onclick="toggleLike(event, this)"></i></a>
         </div>
-
-
     </div>
+
     <?php endforeach; ?>
     <script>
     function toggleLike(event, element) {
@@ -250,22 +249,27 @@ if ($postsResult->num_rows > 0) {
 
     </div>
 
-    <?php 
-    // Check if posts exist
-    if (!empty($posts)): 
-    ?>
-        <div class="site-footer">
-            <footer class="app">Bloggie</footer>
-            <footer class="intro">The simplest way to connect with others through questions and answers.</footer>
-            <footer class="contact">Stay contact with us:</footer>
-            <footer class="icon">
-                <img src="../Images/linkedin.png" />
-                <img src="../Images/x.webp" />
-                <img src="../Images/ins.webp" />
-            </footer>
-            <footer class="copyright">&copy; 2024 Bloggie. All rights reserved.</footer>
-        </div>
+
+    <!-- // Check posts exist -->
+    <?php if (!empty($posts)): ?>
+    <div class="site-footer">
+        <footer class="app">Bloggie</footer>
+        <footer class="intro">The simplest way to connect with others through questions and answers.</footer>
+        <footer class="contact">Stay contact with us:</footer>
+        <footer class="icon">
+            <img src="../Images/linkedin.png" />
+            <img src="../Images/x.webp" />
+            <img src="../Images/ins.webp" />
+        </footer>
+        <footer class="copyright">&copy; 2024 Bloggie. All rights reserved.</footer>
+    </div>
     <?php endif; ?>
+    <?php if (empty($posts)): ?>
+    <div class="nopost">
+        There's nothing posted here yet...you may <a href="post.php">create one</a>.
+    </div>
+    <?php endif; ?>
+
 </body>
 
 </html>
