@@ -105,7 +105,8 @@ if (isset($_GET['guest']) && $_GET['guest'] == true) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
-    $sql = "SELECT * FROM user WHERE emailAddress = '$email' AND password = '$password'";
+    $hashedPassword = md5($password); 
+    $sql = "SELECT * FROM user WHERE emailAddress = '$email' AND password = '$hashedPassword'";
     $results = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($results) > 0) {

@@ -1,17 +1,18 @@
 <?php
-ob_start(); // Start output buffering at the beginning of the script
+ob_start(); 
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    include 'connection.php'; // Include your database connection script
-    // Read the content of the default avatar image
-    $defaultAvatarPath = '../Images/profile.jpg'; // Adjust the path as necessary
+    include 'connection.php'; 
+    $defaultAvatarPath = '../Images/profile.jpg'; 
     $avatarContent = file_get_contents($defaultAvatarPath);
     // Sanitize input and assign variables
     $firstName = isset($_POST['firstName']) ? $conn->real_escape_string($_POST['firstName']) : '';
     $lastName = isset($_POST['lastName']) ? $conn->real_escape_string($_POST['lastName']) : '';
     $email = isset($_POST['email']) ? $conn->real_escape_string($_POST['email']) : '';
     $password = isset($_POST['password']) ? $conn->real_escape_string($_POST['password']) : ''; 
+    $hashedPassword = md5($password); // Hash the password
+
     $userType = 0; // Default user type
 
     // Validate input lengths and formats
@@ -49,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $sql = "INSERT INTO user (firstName, lastName, emailAddress, password, icon, userType) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param('ssssbi', $firstName, $lastName, $email, $password, $null, $userType);
+    $stmt->bind_param('ssssbi', $firstName, $lastName, $email, $hashedPassword, $null, $userType);
     $null = null; 
     $stmt->send_long_data(4, $avatarContent); 
     if ($stmt->execute()) {
