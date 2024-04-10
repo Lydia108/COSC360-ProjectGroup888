@@ -195,6 +195,7 @@ body {
 
 .container2 fieldset button {
     background-color: rgba(131, 78, 4);
+
     border-radius: 10px;
     font-size: 18px;
     /* text-align:center; */
@@ -213,6 +214,7 @@ margin-bottom: 20px;
     border-radius: 10px;
     height: 50px;
     width: 50px;
+    margin-left: 2em;
     margin-right: 10px;
     display: flex;
     object-fit: cover;
@@ -220,7 +222,8 @@ margin-bottom: 20px;
 }
 
 .container2 .content p {
-    display: flex;
+    text-align: left;
+    margin-left: 1.5em;
 }
 
 
@@ -311,4 +314,20 @@ margin-bottom: 20px;
 #displayEmail {
     margin-left: 50px;
 
+}
+
+.postItem {
+    transition: transform 0.3s ease;
+}
+
+.postItem:hover {
+    filter: brightness(1.2);
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15);
+
+    transform: scale(1.02);
+}
+
+.postItem a:hover .postTitle,
+.postItem a:hover .title {
+    text-decoration: underline;
 }

@@ -234,7 +234,7 @@ if ($postId > 0) {
                 <a href="profile.php">My profile</a>
                 <?php endif; ?>
                 <img src="<?= $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
-                    id="avatarImage" title="click for more features"/>
+                    id="avatarImage" title="click for more features" />
                 <!-- if guest then hide div -->
                 <?php if (!isset($_SESSION['is_guest']) || $_SESSION['is_guest'] !== true): ?>
                 <div class="dropdown-content" id="dropdownContent">
@@ -305,9 +305,8 @@ if ($postId > 0) {
         <p class="datetime"><?= htmlspecialchars($post['postDate']); ?></p>
         <h1><?= htmlspecialchars($post['postTitle']); ?></h1>
         <p class="context"><?= nl2br(htmlspecialchars($post['postContent'])); ?></p>
-        <!-- Display all images -->
         <?php foreach ($pictures as $picture): ?>
-        <img src="<?= $picture ?>" alt="Post image" style="cursor: pointer;"
+        <img src="<?= $picture ?>" alt="Post image" style="cursor: pointer;" title='Click for enlarging'
             onclick="showImageFullScreen('<?= $picture ?>')">
         <?php endforeach; ?>
 

@@ -344,6 +344,12 @@ input {
     margin-left: 10px;
     margin-bottom: 10px;
     object-fit: cover;
+    transition: filter 0.3s ease-in-out;
+
+}
+.content img:hover{
+    filter: brightness(1.15); 
+
 }
 
 .commentsList {
@@ -359,7 +365,7 @@ input {
 
 .commentsList span {
     display: inline-block;
-    font-size: 12px;
+    font-size: 18px;
     font-family: Arial, sans-serif;
 }
 
