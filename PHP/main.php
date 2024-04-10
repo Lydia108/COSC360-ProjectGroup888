@@ -61,24 +61,7 @@
 
     draw();
     </script>
-    <script>
-    window.onscroll = function() {
-        scrollFunction()
-    };
 
-    function scrollFunction() {
-        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-            document.getElementById("backToTopButton").style.display = "block";
-        } else {
-            document.getElementById("backToTopButton").style.display = "none";
-        }
-    }
-
-    document.getElementById("backToTopButton").onclick = function() {
-        document.body.scrollTop = 0; // For Safari
-        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-    }
-    </script>
 
 </head>
 <!-- profile -->
@@ -108,7 +91,7 @@ if($_SESSION['is_guest'] == 'true') {
             $iconData = ''; 
         }
         if ( $user['userType'] == 1) {
-            echo "admin";
+            echo "1";
         }        
     } else {
         echo "No user found.";
@@ -118,15 +101,17 @@ if($_SESSION['is_guest'] == 'true') {
     header("Location: login.php");
     exit();
 }
-
 ?>
-<!-- post and picture-->
+<!-- post and picture -->
+<!-- order by #comment to make sure hot topic always comes first -->
 <?php
 include 'connection.php';
-$query = "SELECT p.postId, p.postTitle, p.postContent, p.postTag, p.postDate, u.firstName, u.lastName, u.icon 
+$query = "SELECT p.postId, p.postTitle, p.postContent, p.postTag, p.postDate, u.firstName, u.lastName, u.icon, COUNT(c.postId) as commentCount
 FROM post p 
 INNER JOIN user u ON p.postUserId = u.userId 
-ORDER BY p.postDate DESC";
+LEFT JOIN comment c ON p.postId = c.postId
+GROUP BY p.postId, p.postTitle, p.postContent, p.postTag, p.postDate, u.firstName, u.lastName, u.icon
+ORDER BY commentCount DESC, p.postDate DESC";
 $postsResult = $conn->query($query);
 $posts = [];
 
@@ -148,18 +133,42 @@ if ($postsResult->num_rows > 0) {
 }
 ?>
 
-
-
 <body>
-
     <a href="#top" id="backToTopButton" title="Go to top"> TOP </a>
-
     <div class="sidebar">
         <a href="#"><i class="fa-solid fa-house-chimney">&nbsp;Home</i></a>
         <div class="search-bar">
-            <input type="text" placeholder="Search...">
-            <i class="fa fa-search"></i>
+            <input type="text" id="searchTerm" placeholder="Search post title...">
+            <i class="fa fa-search" id="searchIcon"></i>
         </div>
+        <!-- <script>
+        function searchPost() {
+            let searchTerm = document.getElementById('searchTerm').value;
+
+            if (searchTerm.trim() !== '') {
+                let xhr = new XMLHttpRequest();
+
+                xhr.open('GET', 'search.php?term=' + encodeURIComponent(searchTerm), true);
+
+                xhr.onload = function() {
+                    if (this.status === 200) {
+                        document.getElementById('searchTerm').innerHTML = this.responseText;
+                    }
+                };
+
+                xhr.send();
+            }
+        }
+        document.getElementById('searchIcon').addEventListener('click', function() {
+            let searchTerm = document.getElementById('searchTerm').value;
+
+            if (searchTerm.trim() !== '') {
+                document.getElementById('searchTerm').value = searchTerm;
+                searchPost();
+            }
+        });
+        </script> -->
+
         <div class="actions">
             <!-- if guest then switch makePost with login -->
             <?php if($_SESSION['is_guest'] == 'true') : ?>
@@ -174,10 +183,10 @@ if ($postsResult->num_rows > 0) {
                 <a href="profile.php">My Profile</a>
                 <?php endif; ?>
                 <img src="<?php echo $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
-                    id="avatarImage" />
+                    id="avatarImage" title="click for more features" />
                 <!-- if guest then hide div -->
                 <?php if (!($_SESSION['is_guest'] == 'true')): ?>
-                <div class="dropdown-content">
+                <div class="dropdown-content" id="dropdownContent">
                     <a href="profile.php">Profile</a>
                     <a href="logout.php">Logout</a>
                     <?php 
@@ -202,10 +211,35 @@ if ($postsResult->num_rows > 0) {
             </div>
         </div>
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var avatarImage = document.getElementById('avatarImage');
+        var dropdownContent = document.getElementById('dropdownContent');
+        var isDropdownVisible = false;
+
+        avatarImage.addEventListener('click', function(event) {
+            event.stopPropagation();
+            isDropdownVisible = !isDropdownVisible;
+            if (isDropdownVisible) {
+                dropdownContent.classList.add('show');
+            } else {
+                dropdownContent.classList.remove('show');
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            if (event.target !== avatarImage && event.target !== dropdownContent) {
+                isDropdownVisible = false;
+                dropdownContent.classList.remove('show');
+            }
+        });
+    });
+    </script>
     <?php foreach ($posts as $row): ?>
     <div class="post" title="Click for more details"
         onclick="window.location.href='content.php?postId=<?= $row['postId']; ?>';">
         <p class="title"><?= htmlspecialchars($row['postTitle']); ?></p>
+        <p class="postTag"><?= htmlspecialchars($row['postTag']); ?></p>
         <?php if ($row['firstPicture'] !== null): ?>
         <img src="<?= $row['firstPicture'] ?>" alt="Post image"
             style="max-width: 600px; height: 70%; object-fit:cover;">
@@ -235,22 +269,123 @@ if ($postsResult->num_rows > 0) {
         document.getElementById(oppositeLike).style.display = "inline-block";
     }
     </script>
+    <script>
+    window.onscroll = function() {
+        scrollFunction()
+    };
 
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            document.getElementById("backToTopButton").style.display = "block";
+        } else {
+            document.getElementById("backToTopButton").style.display = "none";
+        }
+    }
+
+    document.getElementById("backToTopButton").onclick = function() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
+    </script>
     <div class="navBar">
         <p>Tags/Categories</p>
-        <button>Lifestyle</button>
-        <button>Technology</button>
-        <button>Education</button>
-        <button>Travel</button>
-        <button>Health&Fitness</button>
-        <button>Gastronomy</button>
-        <button>Career</button>
-        <button>Arts&Culture</button>
-
+        <button onclick="toggleButton(this)">Lifestyle</button>
+        <button onclick="toggleButton(this)">Technology</button>
+        <button onclick="toggleButton(this)">Education</button>
+        <button onclick="toggleButton(this)">Travel</button>
+        <button onclick="toggleButton(this)">Health&Fitness</button>
+        <button onclick="toggleButton(this)">Gastronomy</button>
+        <button onclick="toggleButton(this)">Career</button>
+        <button onclick="toggleButton(this)">Arts&Culture</button>
     </div>
+    <script>
+    function toggleButton(button) {
+        var isActive = button.classList.contains('active');
+        if (isActive) {
+            button.classList.remove('active');
+        } else {
+            button.classList.add('active');
+        }
 
+        var posts = document.querySelectorAll('.post');
+        posts.forEach(function(post) {
+            post.classList.remove('hidden');
+        });
 
-    <!-- // Check posts exist -->
+        if (!isActive) {
+            filterPostsByTag(button.textContent);
+        }
+    }
+
+    function filterPostsByTag(tag) {
+        console.log("Filtering posts by tag:", tag);
+
+        var selectedTags = document.querySelectorAll('.navBar button.active');
+        var selectedTagNames = Array.from(selectedTags).map(btn => btn.textContent.trim());
+
+        var posts = document.querySelectorAll('.post');
+        var hasVisiblePost = false;
+
+        posts.forEach(function(post) {
+            var postTags = post.querySelector('.postTag').textContent;
+            console.log("Post tags:", postTags);
+
+            var allTagsPresent = selectedTagNames.every(tagName => {
+                return postTags.toLowerCase().indexOf('#' + tagName.toLowerCase() + '#') !== -1;
+            });
+
+            if (allTagsPresent) {
+                if (post.classList.contains('hidden')) {
+                    post.classList.remove('hidden');
+                }
+                hasVisiblePost = true;
+            } else {
+                post.classList.add('hidden');
+            }
+        });
+
+        var nopostElement = document.querySelector('.nopost');
+        var footerElement = document.querySelector('.site-footer');
+
+        if (nopostElement) {
+            if (!hasVisiblePost) {
+                console.log("No posts found for selected tags:", selectedTagNames.join(', '));
+                nopostElement.style.display = 'block';
+            } else {
+                nopostElement.style.display = 'none';
+            }
+        }
+
+        if (footerElement) {
+            if (!hasVisiblePost) {
+                footerElement.style.display = 'none';
+            } else {
+                footerElement.style.display = 'block';
+            }
+        }
+    }
+
+    // mouseon
+    document.addEventListener('DOMContentLoaded', function() {
+        var buttons = document.querySelectorAll('.navBar button');
+        buttons.forEach(function(btn) {
+            btn.addEventListener('mouseover', function() {
+                if (!btn.classList.contains('active')) {
+                    btn.classList.add('hover');
+                }
+            });
+
+            btn.addEventListener('mouseout', function() {
+                btn.classList.remove('hover');
+            });
+
+            btn.addEventListener('click', function() {
+                btn.classList.remove('hover');
+            });
+        });
+    });
+    </script>
+    <!-- Check posts exist -->
     <?php if (!empty($posts)): ?>
     <div class="site-footer">
         <footer class="app">Bloggie</footer>
@@ -268,6 +403,7 @@ if ($postsResult->num_rows > 0) {
     <div class="nopost">
         There's nothing posted here yet...you may <a href="post.php">create one</a>.
     </div>
+
     <?php endif; ?>
 
 </body>
