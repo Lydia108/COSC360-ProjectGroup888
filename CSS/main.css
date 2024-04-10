@@ -59,13 +59,17 @@ body {
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     text-align: center;
-    margin-top: 143px;
+    margin-top: 200px;
     margin-left: 70px;
     border-radius: 10px;
-    /* width: 100%;  */
-
-    /* top: 60px; 
-    left: 0;  */
+    max-height: 0; 
+    overflow: hidden;
+    transition: max-height 0.3s ease-out; 
+ 
+}
+.dropdown-content.show {
+    display: block; 
+    max-height: 170px; 
 }
 
 .sidebar .info {
@@ -141,7 +145,7 @@ body {
 }
 
 .navBar {
-    margin-top: 190px;
+    margin-top: 250px;
     float: right;
     margin-left: 85%;
     overflow: visible;
@@ -154,19 +158,26 @@ body {
 
 }
 
-
-.navBar>button {
-    margin-right: 10px;
-}
-
-
 .navBar button {
+    margin-right: 10px;
     border-radius: 20px;
     margin-bottom: 10px;
     background-color: rgba(255, 253, 253, 0.911);
     font-size: 18px;
     padding: 10px 10px;
     font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+
+.navBar button:hover {
+    text-decoration: underline;
+}
+
+.navBar button.active {
+    background-color: rgb(73, 70, 70);
+    color: white;
+    text-decoration: underline;
 }
 
 .post {
@@ -176,7 +187,7 @@ body {
     margin-left: 50px;
     margin-right: 50px;
     width: 80%;
-    min-height: 600px;
+    min-height: 725px;
     border-radius: 20px;
     background-color: rgba(255, 253, 253, 0.5);
     cursor: pointer;
@@ -201,6 +212,13 @@ body {
 }
 
 .post p.title {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 26px;
+    margin-top: 20px;
+    margin-left: 30px;
+}
+.post p.postTag{
     font-weight: bold;
     font-style: italic;
     font-size: 26px;
@@ -418,6 +436,7 @@ canvas {
     font-weight: bold;
     width: 700px;
     font-size: 44px;
+    /* display: none; */
     /* text-align: center; */
 }
 .nopost a{
@@ -430,4 +449,7 @@ canvas {
     filter: brightness(90%);
     color: #806303;
 
+}
+.hidden {
+    display: none;
 }

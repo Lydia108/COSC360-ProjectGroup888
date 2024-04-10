@@ -119,7 +119,7 @@ body {
 }
 
 .navBar {
-    margin-top: 170px;
+    margin-top: 200px;
     float: right;
     margin-left: 80%;
     overflow: visible;
@@ -131,20 +131,23 @@ body {
     padding: 10px 0;
 
 }
-
-
-.navBar>button {
-    margin-right: 10px;
-}
-
-
 .navBar button {
+    margin-right: 10px;
     border-radius: 20px;
     margin-bottom: 10px;
     background-color: rgba(255, 253, 253, 0.911);
     font-size: 18px;
     padding: 10px 10px;
     font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease; 
+}
+
+.navBar button:hover {
+    background-color: rgb(73, 70, 70);
+    color: white;
+    text-decoration: underline;
+    transform: scale(1.05); 
 }
 
 .site-footer {
@@ -424,11 +427,19 @@ input {
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     text-align: center;
-    margin-top: 144px;
+    margin-top: 200px;
     margin-left: 70px;
     border-radius: 10px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
 
 }
+.dropdown-content.show {
+    display: block;
+    max-height: 170px;
+}
+
 
 .info:hover .dropdown-content {
     display: block;

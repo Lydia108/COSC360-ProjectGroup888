@@ -55,25 +55,51 @@ if (isset($_SESSION['user_id'])) {
             <div class="info">
                 <a href="profile.php">My Profile</a>
                 <img src="<?php echo $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
-                    id="avatarImage" />
-                <div class="dropdown-content">
+                    id="avatarImage" title="click for more features"/>
+                <div class="dropdown-content" id="dropdownContent">
                     <a href="profile.php">Profile</a>
                     <a href="logout.php">Logout</a>
+                    <?php 
+                    if ($_SESSION['userType'] == 1): ?>
+                    <a href="admin.php">Admin</a>
+                    <?php endif; ?>
                 </div>
                 <?php
-if (isset($_SESSION['user_id'])) {
-$userId = $_SESSION['user_id'];
-
-echo "<div class='ses'>Welcome, " . $firstName . " " . $lastName . "</div>";
-} else {
-header("Location: login.php");
-exit();
-}
-?>
+                if (isset($_SESSION['user_id'])) {
+                    $userId = $_SESSION['user_id'];
+                    echo "<div class='ses'>Welcome, " . $firstName . " " . $lastName . "</div>";
+                }  else {
+                    header("Location: login.php");
+                    exit();
+                }
+                ?>
             </div>
         </div>
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var avatarImage = document.getElementById('avatarImage');
+        var dropdownContent = document.getElementById('dropdownContent');
+        var isDropdownVisible = false;
 
+        avatarImage.addEventListener('click', function(event) {
+            event.stopPropagation();
+            isDropdownVisible = !isDropdownVisible;
+            if (isDropdownVisible) {
+                dropdownContent.classList.add('show');
+            } else {
+                dropdownContent.classList.remove('show');
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            if (event.target !== avatarImage && event.target !== dropdownContent) {
+                isDropdownVisible = false;
+                dropdownContent.classList.remove('show');
+            }
+        });
+    });
+    </script>
     <div class="navBar">
         <p>Tags/Categories</p>
         <button>Lifestyle</button>
@@ -113,7 +139,7 @@ exit();
             <button class="photo" onclick="document.getElementById('imageUpload').click();">
                 <i class="fa-regular fa-image" id="symbol" onclick="hideHint()"></i>
             </button>
-            <div id="previewContainer"></div>
+            <div id="previewContainer" title="click again to delete"></div>
             <button class="submit">Post now</button>
         </div>
         <input type="file" id="imageUpload" accept="image/*" multiple style="display: none;" />
