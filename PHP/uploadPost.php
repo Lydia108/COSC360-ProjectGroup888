@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $postTag = '';
-    if (preg_match('/#(\w+)/', $postContent, $matches)) {
+    if (preg_match('/#(\w+)#/', $postContent, $matches)) {
         $postTag = $matches[0];
     }
     // post table

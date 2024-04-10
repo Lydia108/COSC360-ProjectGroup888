@@ -234,12 +234,16 @@ if ($postId > 0) {
                 <a href="profile.php">My profile</a>
                 <?php endif; ?>
                 <img src="<?= $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
-                    id="avatarImage" />
+                    id="avatarImage" title="click for more features" />
                 <!-- if guest then hide div -->
                 <?php if (!isset($_SESSION['is_guest']) || $_SESSION['is_guest'] !== true): ?>
-                <div class="dropdown-content">
+                <div class="dropdown-content" id="dropdownContent">
                     <a href="profile.php">Profile</a>
                     <a href="logout.php">Logout</a>
+                    <?php 
+                    if ($_SESSION['userType'] == 1): ?>
+                    <a href="admin.php">Admin</a>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
                 <?php
@@ -256,7 +260,30 @@ if ($postId > 0) {
             </div>
         </div>
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var avatarImage = document.getElementById('avatarImage');
+        var dropdownContent = document.getElementById('dropdownContent');
+        var isDropdownVisible = false;
 
+        avatarImage.addEventListener('click', function(event) {
+            event.stopPropagation();
+            isDropdownVisible = !isDropdownVisible;
+            if (isDropdownVisible) {
+                dropdownContent.classList.add('show');
+            } else {
+                dropdownContent.classList.remove('show');
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            if (event.target !== avatarImage && event.target !== dropdownContent) {
+                isDropdownVisible = false;
+                dropdownContent.classList.remove('show');
+            }
+        });
+    });
+    </script>
     <div class="navBar">
         <p>Tags/Categories</p>
         <button>Lifestyle</button>
@@ -278,17 +305,15 @@ if ($postId > 0) {
         <p class="datetime"><?= htmlspecialchars($post['postDate']); ?></p>
         <h1><?= htmlspecialchars($post['postTitle']); ?></h1>
         <p class="context"><?= nl2br(htmlspecialchars($post['postContent'])); ?></p>
-        <!-- Display all images -->
         <?php foreach ($pictures as $picture): ?>
-        <img src="<?= $picture ?>" alt="Post image" style="cursor: pointer;"
+        <img src="<?= $picture ?>" alt="Post image" style="cursor: pointer;" title='Click for enlarging'
             onclick="showImageFullScreen('<?= $picture ?>')">
         <?php endforeach; ?>
 
         <?php if(!$isGuest): ?>
-        <button id="comment"><i class='far fa-comment-alt'></i></button>
+        <button id="comment"><i class='far fa-comment-alt' title="comment"></i></button>
         <?php endif; ?>
-        <!-- <a href="#"><i class='far fa-thumbs-up' id="thumbsup" onclick="toggleLike()"></i></a>
-        <a href="#"><i class='fas fa-thumbs-up' id="thumbsup1" style="display:none;" onclick="toggleLike()"></i></a> -->
+
 
     </div>
     <div id="fullscreen-overlay" style="display: none;">
@@ -322,7 +347,7 @@ if ($postId > 0) {
             image.style.width = newWidth + 'px';
             image.style.height = newHeight + 'px';
             overlay.style.display = 'flex';
-            image.style.borderRadius = '15px';  
+            image.style.borderRadius = '15px';
             overlay.onclick = function() {
                 overlay.style.display = 'none';
             };
