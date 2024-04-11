@@ -151,7 +151,7 @@ if ($postsResult->num_rows > 0) {
             var input = document.getElementById("searchTerm");
 
             input.addEventListener("keydown", function(event) {
-                if (event.keyCode === 13) { 
+                if (event.keyCode === 13) {
                     searchPosts();
                 }
             });
@@ -370,9 +370,10 @@ if ($postsResult->num_rows > 0) {
             noPostsMessage.textContent = "No posts found with the selected tag. You can ";
 
             var createLink = document.createElement('a');
-            createLink.textContent = "create one";
+            createLink.textContent = "create one.";
             createLink.href = "post.php";
             createLink.target = "_blank";
+            createLink.classList.add('create-link'); // Adding a class for styling
             noPostsMessage.appendChild(createLink);
 
             noPostsMessage.classList.add('no-posts-message');
@@ -391,6 +392,19 @@ if ($postsResult->num_rows > 0) {
             var siteFooter = document.querySelector('.site-footer');
             siteFooter.style.display = 'none';
         }
+
+        // Adding hover styles for the create link
+        var createLinkStyle = document.createElement('style');
+        createLinkStyle.textContent = `
+    .create-link:hover {
+        text-decoration: underline;
+        color: #806303; 
+        transition: all 0.3s ease; 
+    }
+`;
+
+        document.head.appendChild(createLinkStyle);
+
 
         if (hasVisiblePost && noPostsMessage) {
             noPostsMessage.remove();
