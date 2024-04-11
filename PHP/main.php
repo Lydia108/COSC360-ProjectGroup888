@@ -102,8 +102,6 @@ if($_SESSION['is_guest'] == 'true') {
     exit();
 }
 ?>
-<!-- post and picture -->
-<!-- order by #comment to make sure hot topic always comes first -->
 <?php
 include 'connection.php';
 $query = "SELECT p.postId, p.postTitle, p.postContent, p.postTag, p.postDate, u.firstName, u.lastName, u.icon, COUNT(c.postId) as commentCount
@@ -133,41 +131,32 @@ if ($postsResult->num_rows > 0) {
 }
 ?>
 
+<!-- search result -->
+
 <body>
     <a href="#top" id="backToTopButton" title="Go to top"> TOP </a>
     <div class="sidebar">
-        <a href="#"><i class="fa-solid fa-house-chimney">&nbsp;Home</i></a>
+        <a href="main.php"><i class="fa-solid fa-house-chimney">&nbsp;Home</i></a>
         <div class="search-bar">
             <input type="text" id="searchTerm" placeholder="Search post title...">
-            <i class="fa fa-search" id="searchIcon"></i>
+            <i class="fa fa-search" id="searchIcon" onclick="searchPosts()"></i>
         </div>
-        <!-- <script>
-        function searchPost() {
-            let searchTerm = document.getElementById('searchTerm').value;
-
-            if (searchTerm.trim() !== '') {
-                let xhr = new XMLHttpRequest();
-
-                xhr.open('GET', 'search.php?term=' + encodeURIComponent(searchTerm), true);
-
-                xhr.onload = function() {
-                    if (this.status === 200) {
-                        document.getElementById('searchTerm').innerHTML = this.responseText;
-                    }
-                };
-
-                xhr.send();
-            }
+        <script>
+        function searchPosts() {
+            var searchTerm = document.getElementById("searchTerm").value;
+            window.location.href = "search.php?title=" + encodeURIComponent(searchTerm);
         }
-        document.getElementById('searchIcon').addEventListener('click', function() {
-            let searchTerm = document.getElementById('searchTerm').value;
 
-            if (searchTerm.trim() !== '') {
-                document.getElementById('searchTerm').value = searchTerm;
-                searchPost();
-            }
+        document.addEventListener("DOMContentLoaded", function() {
+            var input = document.getElementById("searchTerm");
+
+            input.addEventListener("keydown", function(event) {
+                if (event.keyCode === 13) { 
+                    searchPosts();
+                }
+            });
         });
-        </script> -->
+        </script>
 
         <div class="actions">
             <!-- if guest then switch makePost with login -->
@@ -185,7 +174,7 @@ if ($postsResult->num_rows > 0) {
                 <img src="<?php echo $iconData ? 'data:image/jpeg;base64,' . $iconData : '../Images/profile.jpg'; ?>"
                     id="avatarImage" title="click for more features" />
                 <!-- if guest then hide div -->
-                <?php if (!($_SESSION['is_guest'] == 'true')): ?>
+                <?php if (!isset($_SESSION['is_guest']) || $_SESSION['is_guest'] !== true): ?>
                 <div class="dropdown-content" id="dropdownContent">
                     <a href="profile.php">Profile</a>
                     <a href="logout.php">Logout</a>
@@ -195,7 +184,30 @@ if ($postsResult->num_rows > 0) {
                     <?php endif; ?>
                 </div>
                 <?php endif; ?>
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var avatarImage = document.getElementById('avatarImage');
+                    var dropdownContent = document.getElementById('dropdownContent');
+                    var isDropdownVisible = false;
 
+                    avatarImage.addEventListener('click', function(event) {
+                        event.stopPropagation();
+                        isDropdownVisible = !isDropdownVisible;
+                        if (isDropdownVisible) {
+                            dropdownContent.classList.add('show');
+                        } else {
+                            dropdownContent.classList.remove('show');
+                        }
+                    });
+
+                    document.addEventListener('click', function(event) {
+                        if (event.target !== avatarImage && event.target !== dropdownContent) {
+                            isDropdownVisible = false;
+                            dropdownContent.classList.remove('show');
+                        }
+                    });
+                });
+                </script>
                 <?php
                 if ($_SESSION['is_guest'] == 'true') {
                     echo "<div class='ses'>Welcome to Bloggie</div>"; 
@@ -212,34 +224,17 @@ if ($postsResult->num_rows > 0) {
         </div>
     </div>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var avatarImage = document.getElementById('avatarImage');
-        var dropdownContent = document.getElementById('dropdownContent');
-        var isDropdownVisible = false;
-
-        avatarImage.addEventListener('click', function(event) {
-            event.stopPropagation();
-            isDropdownVisible = !isDropdownVisible;
-            if (isDropdownVisible) {
-                dropdownContent.classList.add('show');
-            } else {
-                dropdownContent.classList.remove('show');
-            }
-        });
-
-        document.addEventListener('click', function(event) {
-            if (event.target !== avatarImage && event.target !== dropdownContent) {
-                isDropdownVisible = false;
-                dropdownContent.classList.remove('show');
-            }
-        });
+    var searchIcon = document.getElementById("searchIcon");
+    searchIcon.addEventListener("click", function() {
+        var searchTerm = document.getElementById("searchTerm").value;
+        fetchPosts(searchTerm);
     });
     </script>
     <?php foreach ($posts as $row): ?>
     <div class="post" title="Click for more details"
         onclick="window.location.href='content.php?postId=<?= $row['postId']; ?>';">
-        <p class="title"><?= htmlspecialchars($row['postTitle']); ?></p>
-        <p class="postTag"><?= htmlspecialchars($row['postTag']); ?></p>
+        <p class="title"><?= htmlspecialchars($row['postTitle']); ?><span class="postTag">
+                (<?= htmlspecialchars($row['postTag']); ?>)</span></p>
         <?php if ($row['firstPicture'] !== null): ?>
         <img src="<?= $row['firstPicture'] ?>" alt="Post image"
             style="max-width: 600px; height: 70%; object-fit:cover;">
@@ -301,6 +296,12 @@ if ($postsResult->num_rows > 0) {
     <script>
     function toggleButton(button) {
         var isActive = button.classList.contains('active');
+
+        var allButtons = document.querySelectorAll('.navBar button');
+        allButtons.forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+
         if (isActive) {
             button.classList.remove('active');
         } else {
@@ -312,9 +313,7 @@ if ($postsResult->num_rows > 0) {
             post.classList.remove('hidden');
         });
 
-        if (!isActive) {
-            filterPostsByTag(button.textContent);
-        }
+        filterPostsByTag(button.textContent);
     }
 
     function filterPostsByTag(tag) {
@@ -323,18 +322,37 @@ if ($postsResult->num_rows > 0) {
         var selectedTags = document.querySelectorAll('.navBar button.active');
         var selectedTagNames = Array.from(selectedTags).map(btn => btn.textContent.trim());
 
+        console.log("Selected tag names:", selectedTagNames);
+
         var posts = document.querySelectorAll('.post');
+
+        if (selectedTags.length === 0) {
+            posts.forEach(function(post) {
+                post.classList.remove('hidden');
+            });
+
+            var noPostsMessage = document.querySelector('.no-posts-message');
+            if (noPostsMessage) {
+                noPostsMessage.remove();
+            }
+
+            var siteFooter = document.querySelector('.site-footer');
+            siteFooter.style.display = 'block';
+
+            return;
+        }
+
         var hasVisiblePost = false;
 
         posts.forEach(function(post) {
-            var postTags = post.querySelector('.postTag').textContent;
+            var postTags = post.querySelector('.postTag').textContent.trim();
             console.log("Post tags:", postTags);
 
-            var allTagsPresent = selectedTagNames.every(tagName => {
+            var anyTagPresent = selectedTagNames.some(tagName => {
                 return postTags.toLowerCase().indexOf('#' + tagName.toLowerCase() + '#') !== -1;
             });
 
-            if (allTagsPresent) {
+            if (anyTagPresent) {
                 if (post.classList.contains('hidden')) {
                     post.classList.remove('hidden');
                 }
@@ -344,27 +362,46 @@ if ($postsResult->num_rows > 0) {
             }
         });
 
-        var nopostElement = document.querySelector('.nopost');
-        var footerElement = document.querySelector('.site-footer');
+        var noPostsMessage = document.querySelector('.no-posts-message');
+        if (!hasVisiblePost && !noPostsMessage) {
+            console.log("Creating no posts message...");
 
-        if (nopostElement) {
-            if (!hasVisiblePost) {
-                console.log("No posts found for selected tags:", selectedTagNames.join(', '));
-                nopostElement.style.display = 'block';
-            } else {
-                nopostElement.style.display = 'none';
-            }
+            noPostsMessage = document.createElement('p');
+            noPostsMessage.textContent = "No posts found with the selected tag. You can ";
+
+            var createLink = document.createElement('a');
+            createLink.textContent = "create one";
+            createLink.href = "post.php";
+            createLink.target = "_blank";
+            noPostsMessage.appendChild(createLink);
+
+            noPostsMessage.classList.add('no-posts-message');
+            document.body.appendChild(noPostsMessage);
+
+            noPostsMessage.style.display = 'block';
+            noPostsMessage.style.fontSize = '24px';
+            noPostsMessage.style.fontWeight = 'bold';
+            noPostsMessage.style.textAlign = 'center';
+            noPostsMessage.style.position = 'fixed';
+            noPostsMessage.style.top = '50%';
+            noPostsMessage.style.left = '50%';
+            noPostsMessage.style.transform = 'translate(-50%, -50%)';
+            noPostsMessage.style.zIndex = '9999';
+
+            var siteFooter = document.querySelector('.site-footer');
+            siteFooter.style.display = 'none';
         }
 
-        if (footerElement) {
-            if (!hasVisiblePost) {
-                footerElement.style.display = 'none';
-            } else {
-                footerElement.style.display = 'block';
+        if (hasVisiblePost && noPostsMessage) {
+            noPostsMessage.remove();
+        }
+
+        if (!selectedTags.length) {
+            if (noPostsMessage) {
+                noPostsMessage.style.display = 'none';
             }
         }
     }
-
     // mouseon
     document.addEventListener('DOMContentLoaded', function() {
         var buttons = document.querySelectorAll('.navBar button');

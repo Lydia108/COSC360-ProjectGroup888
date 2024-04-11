@@ -46,10 +46,10 @@ if (isset($_SESSION['user_id'])) {
 <body>
     <div class="sidebar">
         <a href="main.php"><i class="fa-solid fa-house-chimney">&nbsp;Home</i></a>
-        <div class="search-bar">
+        <!-- <div class="search-bar">
             <input type="text" placeholder="Search...">
             <i class="fa fa-search"></i>
-        </div>
+        </div> -->
         <div class="actions">
             <a href="post.php">Make Post</a>
             <div class="info">

@@ -221,9 +221,14 @@ if ($postStmt) {
             <div class="content">
                 <div
                     style="overflow-y: auto; overflow-x: hidden; max-height: 300px; scrollbar-width: thin; scrollbar-color: #555 transparent;">
+
+                    <?php if (empty($posts)): ?>
+                        <p class="no-posts-message">You don't have any posts. You can <a href="post.php">create one</a>.</p>
+                    <?php else: ?>
+
                     <?php foreach ($posts as $post): ?>
                     <!-- Link to content.php with postId as parameter -->
-                    <a href="content.php?postId=<?php echo $post['postId']; ?> "
+                    <a href="content.php?postId=<?php echo $post['postId']; ?>"
                         style="text-decoration: none; color: inherit;" title='Click for more details'>
                         <div class="postItem" style="display: flex; align-items: flex-start; margin-bottom: 10px;">
 
@@ -232,16 +237,18 @@ if ($postStmt) {
                                 title='Click for more details' class="postImage"
                                 style="margin-right: 10px; margin-top:20px;" />
                             <?php endif; ?>
+
                             <div>
                                 <p class='postTitle'
                                     style="margin-bottom: 5px; text-decoration: none; border-bottom: none;">
-                                    <?php echo htmlspecialchars($post['postTitle']); ?></p>
+                                    <?php echo htmlspecialchars($post['postTitle']); ?>
+                                </p>
 
                                 <p class="title" style="text-decoration: none; border-bottom: none;">
                                     <?php 
-                                        $content = htmlspecialchars($post['postContent']);
-                                        echo strlen($content) > 100 ? substr($content, 0, 100) . '...' : $content; 
-                                    ?>
+                                    $content = htmlspecialchars($post['postContent']);
+                                    echo strlen($content) > 100 ? substr($content, 0, 100) . '...' : $content; 
+                                ?>
                                 </p>
                             </div>
                         </div>
@@ -250,8 +257,12 @@ if ($postStmt) {
                     <div style="border-bottom: 2px solid #555; width:100%;"></div>
 
                     <?php endforeach; ?>
+
+                    <?php endif; ?>
+
                 </div>
             </div>
+
         </fieldset>
     </div>
     <script>
