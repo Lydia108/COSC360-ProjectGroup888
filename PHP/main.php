@@ -11,6 +11,7 @@
     <script src="https://kit.fontawesome.com/d1344ce34d.js" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/0485a9f289.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.5.1/dist/gsap.min.js"></script>
+    <script src="https://kit.fontawesome.com/6b2b77b93e.js" crossorigin="anonymous"></script>
     <script>
     gsap.to("#backToTopButton", {
         duration: 1,
@@ -233,6 +234,10 @@ if ($postsResult->num_rows > 0) {
     <?php foreach ($posts as $row): ?>
     <div class="post" title="Click for more details"
         onclick="window.location.href='content.php?postId=<?= $row['postId']; ?>';">
+        
+        <?php if ($row['commentCount'] >= 5): ?>
+            <i class="fa-solid fa-fire"></i>
+        <?php endif; ?>
         <p class="title"><?= htmlspecialchars($row['postTitle']); ?><span class="postTag">
                 (<?= htmlspecialchars($row['postTag']); ?>)</span></p>
         <?php if ($row['firstPicture'] !== null): ?>
@@ -253,8 +258,8 @@ if ($postsResult->num_rows > 0) {
                     onclick="toggleLike(event, this)"></i></a>
         </div>
     </div>
+<?php endforeach; ?>
 
-    <?php endforeach; ?>
     <script>
     function toggleLike(event, element) {
         event.stopPropagation();
