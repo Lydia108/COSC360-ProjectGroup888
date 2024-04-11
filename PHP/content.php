@@ -217,10 +217,10 @@ if ($postId > 0) {
     <a href="#top" id="backToTopButton" title="Go to top"> TOP </a>
     <div class="sidebar">
         <a href="main.php"><i class="fa-solid fa-house-chimney">&nbsp;Home</i></a>
-        <div class="search-bar">
+        <!-- <div class="search-bar">
             <input type="text" placeholder="Search...">
             <i class="fa fa-search"></i>
-        </div>
+        </div> -->
         <div class="actions">
             <?php if (isset($_SESSION['is_guest']) && $_SESSION['is_guest'] == true): ?>
             <button id="guestLogin" onclick="window.location.href='login.php'">Log in</button>
@@ -313,8 +313,6 @@ if ($postId > 0) {
         <?php if(!$isGuest): ?>
         <button id="comment"><i class='far fa-comment-alt' title="comment"></i></button>
         <?php endif; ?>
-
-
     </div>
     <div id="fullscreen-overlay" style="display: none;">
         <img id="fullscreen-image" src="" alt="Full Screen Image">

@@ -87,6 +87,38 @@ if ($postStmt) {
 } else {
     echo "Error in preparing SQL statement.";
 }
+
+// Fetch comments
+$comments = [];  // Initialize an empty array for comment information
+
+$commentStmt = $conn->prepare("
+    SELECT 
+        comment.postId,
+        comment.postComment,
+        comment.postUserId,
+        comment.postDate,
+        post.postTitle
+    FROM 
+        comment
+    LEFT JOIN 
+        post ON comment.postId = post.postId
+    WHERE 
+        comment.postUserId = ?
+");
+if ($commentStmt) {
+    $userId = $_SESSION['user_id'];  
+    $commentStmt->bind_param("i", $userId); 
+    $commentStmt->execute();
+    $commentResult = $commentStmt->get_result();
+
+    while ($row = $commentResult->fetch_assoc()) {
+        $comments[] = $row;
+    }
+
+    $commentStmt->close();
+} else {
+    echo "Error in preparing SQL statement for comments.";
+}
 ?>
 
 
@@ -216,14 +248,20 @@ if ($postStmt) {
     <div class="container2">
         <fieldset>
             <legend>
-                <button class="like">My posts</button>
+                <button id="myPostBtn" class="tabButton activeTab">My posts</button>
+                --
+                <button id="myCommentBtn" class="tabButton">Comment history</button>
             </legend>
             <div class="content">
-                <div
+                <div id="postContent"
                     style="overflow-y: auto; overflow-x: hidden; max-height: 300px; scrollbar-width: thin; scrollbar-color: #555 transparent;">
+
+                    <?php if (empty($posts)): ?>
+                    <p class="no-posts-message">You don't have any posts. You can <a href="post.php">create one</a>.</p>
+                    <?php else: ?>
+
                     <?php foreach ($posts as $post): ?>
-                    <!-- Link to content.php with postId as parameter -->
-                    <a href="content.php?postId=<?php echo $post['postId']; ?> "
+                    <a href="content.php?postId=<?php echo $post['postId']; ?>"
                         style="text-decoration: none; color: inherit;" title='Click for more details'>
                         <div class="postItem" style="display: flex; align-items: flex-start; margin-bottom: 10px;">
 
@@ -232,27 +270,83 @@ if ($postStmt) {
                                 title='Click for more details' class="postImage"
                                 style="margin-right: 10px; margin-top:20px;" />
                             <?php endif; ?>
+
                             <div>
                                 <p class='postTitle'
                                     style="margin-bottom: 5px; text-decoration: none; border-bottom: none;">
-                                    <?php echo htmlspecialchars($post['postTitle']); ?></p>
+                                    <?php echo htmlspecialchars($post['postTitle']); ?>
+                                </p>
 
                                 <p class="title" style="text-decoration: none; border-bottom: none;">
                                     <?php 
-                                        $content = htmlspecialchars($post['postContent']);
-                                        echo strlen($content) > 100 ? substr($content, 0, 100) . '...' : $content; 
-                                    ?>
+                            $content = htmlspecialchars($post['postContent']);
+                            echo strlen($content) > 100 ? substr($content, 0, 100) . '...' : $content; 
+                        ?>
                                 </p>
                             </div>
                         </div>
                     </a>
-
                     <div style="border-bottom: 2px solid #555; width:100%;"></div>
-
                     <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
+                <div id="commentContent"
+                    style="display: none;overflow-y: auto; overflow-x: hidden; max-height: 300px; scrollbar-width: thin; scrollbar-color: #555 transparent;">
+
+                    <?php if (!empty($comments)): ?>
+                    <?php foreach ($comments as $comment): ?>
+                    <div class="commentItem" onclick="redirectToContent(<?php echo $comment['postId']; ?>);">
+                        <p>
+                            Comment content:
+                            <?php echo htmlspecialchars($comment['postComment']); ?>
+                        </p>
+                        <p>Commented on: <?php echo htmlspecialchars($comment['postDate']); ?></p>
+                    </div>
+                    <div class="divider" style="border-bottom: 2px solid #555; width:100%;"></div> <!-- Divider line -->
+                    <?php endforeach; ?>
+                    <?php else: ?>
+                    <p class="no-comments-message">
+                        <span style="font-weight: bold;">You haven't commented on any posts yet.</span>
+                        You can <a href="main.php" style="text-decoration: none; color: #007BFF;">go to the home
+                            page</a> to explore.
+                    </p>
+                    <?php endif; ?>
+                </div>
+
+                <script>
+                function redirectToContent(postId) {
+                    window.location.href = "content.php?postId=" + postId;
+                }
+                </script>
+
+
             </div>
         </fieldset>
+
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const myPostBtn = document.getElementById('myPostBtn');
+            const myCommentBtn = document.getElementById('myCommentBtn');
+            const postContent = document.getElementById('postContent');
+            const commentContent = document.getElementById('commentContent');
+
+            myPostBtn.addEventListener('click', function() {
+                myPostBtn.classList.add('activeTab');
+                myCommentBtn.classList.remove('activeTab');
+                postContent.style.display = 'block';
+                commentContent.style.display = 'none';
+            });
+
+            myCommentBtn.addEventListener('click', function() {
+                myCommentBtn.classList.add('activeTab');
+                myPostBtn.classList.remove('activeTab');
+                commentContent.style.display = 'block';
+                postContent.style.display = 'none';
+            });
+        });
+        </script>
+
+
     </div>
     <script>
     let isEditing = false;

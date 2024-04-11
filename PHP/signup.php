@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare("SELECT emailAddress FROM user WHERE emailAddress = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $stmt->store_result(); // Needed to check row count
+    $stmt->store_result(); 
     if ($stmt->num_rows > 0) {
         $errors[] = "Email already in use. Please use a different email.";
     }
@@ -46,11 +46,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         foreach ($errors as $error) {
             echo "<script>alert('$error');</script>";
         }
-        exit; // Stop script execution if there are errors
+        exit; 
     }
-
-    // No errors; proceed with user registration
-    $avatarContent = null; // Initialize variable to hold binary data of the avatar
+    $avatarContent = null; 
 
     if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
         // Validate file size and type

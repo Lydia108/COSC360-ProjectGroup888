@@ -198,22 +198,24 @@ body {
 
     border-radius: 10px;
     font-size: 18px;
-    /* text-align:center; */
-    /* width:10%; */
+   
     font-weight: bold;
     padding: 10px 20px;
     color: white;
-    width: 150px;
+    width: 220px;
+    cursor: pointer;
+}
+.container2 fieldset button:hover {
+    background-color: rgb(247, 145, 4);
+
+    text-decoration: underline;
 
 }
 
-/* .container2 ul {
-margin-bottom: 20px;
-} */
 .container2 .content img {
     border-radius: 10px;
-    height: 50px;
-    width: 50px;
+    height: 100px;
+    width: 100px;
     margin-left: 2em;
     margin-right: 10px;
     display: flex;
@@ -327,7 +329,40 @@ margin-bottom: 20px;
     transform: scale(1.02);
 }
 
+.commentItem{
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+.commentItem:hover{
+    filter: brightness(1.2);
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+
+    transform: scale(1.02);
+}
 .postItem a:hover .postTitle,
 .postItem a:hover .title {
     text-decoration: underline;
+}
+.no-posts-message {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-left: 50%;
+}
+
+.no-posts-message a:hover {
+    text-decoration: underline;
+    filter: brightness(90%);
+    color: #806303;   
+}
+.no-comments-message{
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-left: 50%;
+}
+.no-comments-message a:hover {
+    text-decoration: underline;
+    filter: brightness(90%);
+    color: #806303;   
 }
