@@ -1,18 +1,47 @@
+td,
+th {
+    border: 2px solid black; 
+    padding: 8px; 
+    text-align: left; 
+}
+#userTable {
+    border-collapse: separate; 
+    border-spacing: 0; 
+    border-radius: 8px; 
+    overflow: hidden; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+}
 #deleteUser {
     border-radius: 15px;
     padding: 10px 15px;
     width: 200px;
     background-color: #f3cd4f;
     font-size: 22px;
-    cursor:pointer;
-    font-weight:bold;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
 #deleteUser:hover {
     filter: brightness(0.9);
     color: white;
-    cursor:pointer;
+    cursor: pointer;
 
+}
+#deleteButton{
+    margin-top: 20px;
+    border-radius: 15px;
+    padding: 10px 15px;
+    width: 200px;
+    background-color: #f3cd4f;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: bold;
+}
+#deleteButton:hover{
+    filter: brightness(0.9);
+    color: white;
+    cursor: pointer;
 }
 #deletePost {
     border-radius: 15px;
@@ -20,63 +49,106 @@
     width: 200px;
     background-color: #f3cd4f;
     font-size: 22px;
-    cursor:pointer;
-    font-weight:bold;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 #deletePost:hover {
     filter: brightness(0.9);
     color: white;
-    cursor:pointer;
+    cursor: pointer;
 
 
 }
 
-/* Post Table Styling */
 #postTable {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 80px; /* Adjust based on your fixed header's height */
+    margin-top: 20px; 
 }
 
+#checkUsage {
+    border-radius: 15px;
+    padding: 10px 15px;
+    width: 200px;
+    background-color: #f3cd4f;
+    font-size: 22px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#checkUsage:hover {
+    filter: brightness(0.9);
+    color: white;
+    cursor: pointer;
+}
+#deletePosts{
+    border-radius: 15px;
+    padding: 10px 15px;
+    width: 200px;
+    background-color: #f3cd4f;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: bold;
+}
+#deletePosts:hover{
+    filter: brightness(0.9);
+    color: white;
+    cursor: pointer;
+}
 .postContainer {
-    background-color: white;
+    background-color: #f9f9f9;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
-    width: 80%; /* Responsive width */
+    width: 90%;
+    border: 1px solid #ddd;
     transition: transform 0.2s ease;
+    cursor: pointer;
+
 }
 
 .postContainer:hover {
-    transform: translateY(-5px); /* Slight raise effect on hover */
+    transform: translateY(-5px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    filter: brightness(1.1); 
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, filter 0.3s ease-in-out; 
 }
 
-/* Styling for post titles */
+.postContainer label{
+    cursor: pointer;
+
+}
+
 .postContainer h3 {
     color: #333;
     margin: 0 0 10px 0;
 }
 
-/* Post Pictures Styling */
 .postPictures {
     display: flex;
     justify-content: start;
-    gap: 10px; /* Space between images */
+    gap: 10px;
     margin-bottom: 15px;
-    flex-wrap: wrap; /* Allow wrapping for multiple images */
+    flex-wrap: wrap;
 }
 
 .postPictures img {
-    width: 100px; /* Fixed width, adjust as needed */
+    width: 100px;
     height: auto;
-    border-radius: 5px; /* Slightly rounded corners for images */
-    object-fit: cover; /* Ensure aspect ratio is maintained */
+    border-radius: 5px;
+    object-fit: cover;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    max-width: 100px;
+    max-height: 100px;
+    width: 80px;
+    height: 80px;
+
 }
 
-/* Post Content Styling */
 .context {
     color: #666;
     line-height: 1.5;
@@ -84,12 +156,12 @@
 }
 
 
-/* Additional Responsive Considerations */
 @media (max-width: 768px) {
     .postContainer {
-        width: 90%; /* More width on smaller screens */
+        width: 90%;
     }
+
     .postPictures {
-        justify-content: center; /* Center images on smaller screens */
+        justify-content: center;
     }
 }
