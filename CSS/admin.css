@@ -29,4 +29,67 @@
     color: white;
     cursor:pointer;
 
+
+}
+
+/* Post Table Styling */
+#postTable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 80px; /* Adjust based on your fixed header's height */
+}
+
+.postContainer {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 80%; /* Responsive width */
+    transition: transform 0.2s ease;
+}
+
+.postContainer:hover {
+    transform: translateY(-5px); /* Slight raise effect on hover */
+}
+
+/* Styling for post titles */
+.postContainer h3 {
+    color: #333;
+    margin: 0 0 10px 0;
+}
+
+/* Post Pictures Styling */
+.postPictures {
+    display: flex;
+    justify-content: start;
+    gap: 10px; /* Space between images */
+    margin-bottom: 15px;
+    flex-wrap: wrap; /* Allow wrapping for multiple images */
+}
+
+.postPictures img {
+    width: 100px; /* Fixed width, adjust as needed */
+    height: auto;
+    border-radius: 5px; /* Slightly rounded corners for images */
+    object-fit: cover; /* Ensure aspect ratio is maintained */
+}
+
+/* Post Content Styling */
+.context {
+    color: #666;
+    line-height: 1.5;
+    margin-top: 10px;
+}
+
+
+/* Additional Responsive Considerations */
+@media (max-width: 768px) {
+    .postContainer {
+        width: 90%; /* More width on smaller screens */
+    }
+    .postPictures {
+        justify-content: center; /* Center images on smaller screens */
+    }
 }
