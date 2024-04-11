@@ -204,8 +204,10 @@ body {
 .post img {
     margin-top: 1em;
     object-fit: cover;
-    max-width: 20%;
-    max-height: 20%;
+    max-width: 350px;
+    max-height: 350px;
+    width: 200px;
+    height: 200px;
     border-radius: 10px;
 }
 

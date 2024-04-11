@@ -179,7 +179,10 @@ body {
     color: white;
     text-decoration: underline;
 }
-
+.fa-solid.fa-fire {
+    font-size: 58px;
+    padding: 2px 30px;
+}
 .post {
     float: left;
     position: relative;

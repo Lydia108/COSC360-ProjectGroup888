@@ -64,10 +64,10 @@ if(isset($_GET['title'])) {
             $pictureStmt->bind_param("i", $postId);
             $pictureStmt->execute();
             $pictureResult = $pictureStmt->get_result();
-            if ($pictureRow = $pictureResult->fetch_assoc()) {
-                $firstPicture = 'data:image/jpeg;base64,' . base64_encode($pictureRow['postPicture']);
-            } else {
-                $firstPicture = null;
+
+            $pictures = [];
+            while ($pictureRow = $pictureResult->fetch_assoc()) {
+                $pictures[] = 'data:image/jpeg;base64,' . base64_encode($pictureRow['postPicture']);
             }
 
             $posts[] = [
@@ -81,12 +81,13 @@ if(isset($_GET['title'])) {
                 'lastName' => $lastName,
                 'iconData' => $iconData,
                 'commentCount' => $commentCount,
-                'firstPicture' => $firstPicture
+                'pictures' => $pictures
             ];
         }
     }
     $stmt->close();
 }
+
 ?>
 
 <body>
@@ -144,34 +145,36 @@ if(isset($_GET['title'])) {
                 });
                 </script>
                 <?php
-if ($_SESSION['is_guest'] == 'true') {
-    echo "<div class='ses'>Welcome to Bloggie</div>"; 
-} elseif (isset($_SESSION['user_id'])) { 
-    $userId = $_SESSION['user_id'];
-    echo "<div class='ses'>Welcome! ";
-    if (!empty($posts)) {
-        echo $firstName . " " . $lastName;
-    }
-    echo "</div>";
-} else {
-    header("Location: login.php"); 
-    exit();
-}
-?>
-
-
+                if ($_SESSION['is_guest'] == 'true') {
+                     echo "<div class='ses'>Welcome to Bloggie</div>"; 
+                } elseif (isset($_SESSION['user_id'])) { 
+                    $userId = $_SESSION['user_id'];
+                    echo "<div class='ses'>Welcome! ";
+                if (!empty($posts)) {
+                    echo $firstName . " " . $lastName;
+                }
+                    echo "</div>";
+                } else {
+                    header("Location: login.php"); 
+                exit();
+                }
+                ?>
             </div>
         </div>
     </div>
     <div class="search-results">
         <?php foreach ($posts as $post): ?>
-        <div class='post'>
+        <div class='post' onclick="window.location.href='content.php?postId=<?= $post['postId']; ?>';">
             <h2>Title: <?= $post['postTitle']; ?></h2>
-            <?php if ($post['firstPicture']): ?>
-            <img src="<?= $post['firstPicture']; ?>" alt="Post image">
+            <?php if (!empty($post['pictures'])): ?>
+            <?php foreach ($post['pictures'] as $picture): ?>
+            <img src="<?= $picture; ?>" alt="Post image">
+            <?php endforeach; ?>
             <?php endif; ?>
             <p>Content: <?= substr($post['postContent'], 0, 300); ?>...</p>
+            <?php if (!empty($post['postTag'])): ?>
             <p>Tag: <?= $post['postTag']; ?></p>
+            <?php endif; ?>
             <p>Posted by: <?= $post['firstName'] . ' ' . $post['lastName']; ?></p>
             <p>Comments: <?= $post['commentCount']; ?></p>
         </div>
@@ -182,8 +185,11 @@ if ($_SESSION['is_guest'] == 'true') {
             You may wanna <a href="post.php">create one</a>!
         </p>
         <?php endif; ?>
-
     </div>
+
+
+
+
 </body>
 
 
