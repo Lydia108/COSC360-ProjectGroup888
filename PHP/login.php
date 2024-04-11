@@ -102,28 +102,43 @@ if (isset($_GET['guest']) && $_GET['guest'] == true) {
     exit();
 }
 
+// Assuming you've fetched the user's stored hashed password from the database into $storedHash
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
-    $hashedPassword = md5($password); 
-    $sql = "SELECT * FROM user WHERE emailAddress = '$email' AND password = '$hashedPassword'";
-    $results = mysqli_query($conn, $sql);
 
-    if (mysqli_num_rows($results) > 0) {
-        $row = mysqli_fetch_assoc($results);
-        $_SESSION['user_id'] = $row['userId'];
-        $_SESSION['logged_in'] = true; // 
-        $_SESSION['is_guest'] = false; // 
-        $_SESSION['userType'] = $row['userType']; // 
+    // Query to fetch the stored hash from the database
+    $stmt = $conn->prepare("SELECT * FROM user WHERE emailAddress = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $storedHash = $row['password'];
 
-        header("Location: main.php");
-        exit();
+        // Verifying the password
+        if (password_verify($password, $storedHash)) {
+            $_SESSION['user_id'] = $row['userId'];
+            $_SESSION['logged_in'] = true;
+            $_SESSION['is_guest'] = false;
+            $_SESSION['userType'] = $row['userType'];
+
+            header("Location: main.php");
+            exit();
+        } else {
+            $_SESSION['error_message'] = "Invalid email or password.";
+            header("Location: login.php");
+            exit();
+        }
     } else {
         $_SESSION['error_message'] = "Invalid email or password.";
         header("Location: login.php");
         exit();
     }
+    $stmt->close();
 }
+$conn->close();
+
 
 
 if (isset($_SESSION['error_message'])) {
