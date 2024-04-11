@@ -101,13 +101,9 @@ if (isset($_GET['guest']) && $_GET['guest'] == true) {
     header('Location: main.php');
     exit();
 }
-
-// Assuming you've fetched the user's stored hashed password from the database into $storedHash
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
-
-    // Query to fetch the stored hash from the database
     $stmt = $conn->prepare("SELECT * FROM user WHERE emailAddress = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -115,8 +111,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $storedHash = $row['password'];
-
-        // Verifying the password
         if (password_verify($password, $storedHash)) {
             $_SESSION['user_id'] = $row['userId'];
             $_SESSION['logged_in'] = true;
