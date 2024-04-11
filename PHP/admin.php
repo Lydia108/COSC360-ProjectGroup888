@@ -1,17 +1,13 @@
 <?php
 session_start();
 include 'connection.php';
-// Check logged in
-if (!isset($_SESSION['user_id'])) {
+
+// Security check: ensure the user is logged in and is an admin
+if (!isset($_SESSION['user_id']) || $_SESSION['userType'] != '1') {
     header("Location: login.php");
-    exit();
+    exit;
 }
 
-// Check admin
-if ($_SESSION['userType'] != '1') {
-    header("Location: main.php");
-    exit();
-}
 $adminFullName = "";
 if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id'];
@@ -21,25 +17,14 @@ if (isset($_SESSION['user_id'])) {
     $result = $stmt->get_result();
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
-        $adminFullName = $user['firstName'] . " " . $user['lastName'];
+        $adminFullName = htmlspecialchars($user['firstName']) . " " . htmlspecialchars($user['lastName']);
     }
     $stmt->close();
 }
-if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    $deleteId = $_GET['delete'];
-    $stmt = $conn->prepare("DELETE FROM user WHERE userId = ?");
-    $stmt->bind_param("i", $deleteId);
-    if ($stmt->execute()) {
-        // $deleteMessage = "User deleted successfully.";
-        echo '<script>alert("User deleted successfully.");</script>';
-    } else {
-        echo '<script>alert("Error deleting user.");</script>';
-    }
-    $stmt->close();
-}
+
+// Fetch users
 $query = "SELECT * FROM user";
 $result = $conn->query($query);
-
 $users = [];
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -47,29 +32,30 @@ if ($result->num_rows > 0) {
     }
 }
 
-// Fetch posts
-$postQuery = "SELECT * FROM post ORDER BY postDate ASC";
-$postResult = $conn->query($postQuery);
-
-$posts = [];
-if ($postResult->num_rows > 0) {
-    while ($row = $postResult->fetch_assoc()) {
-        $posts[] = $row;
-    }
-}
-
 // Fetch posts and their pictures
 $posts = [];
-$postQuery = "SELECT post.*, GROUP_CONCAT(picture.postPicture SEPARATOR '|') AS pictures 
+$postQuery = "SELECT post.postId, post.postTitle, post.postContent, post.postDate
               FROM post 
-              LEFT JOIN picture ON post.postId = picture.postId 
-              GROUP BY post.postId 
               ORDER BY post.postDate ASC";
 $postResult = $conn->query($postQuery);
 
 if ($postResult->num_rows > 0) {
     while ($row = $postResult->fetch_assoc()) {
-        $row['pictures'] = explode('|', $row['pictures']); 
+        $postId = $row['postId'];
+
+        // Fetch associated pictures
+        $stmt = $conn->prepare("SELECT postPicture FROM picture WHERE postId = ?");
+        $stmt->bind_param("i", $postId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $pictures = [];
+        while ($pictureRow = $result->fetch_assoc()) {
+            $pictures[] = 'data:image/jpeg;base64,' . base64_encode($pictureRow['postPicture']);
+        }
+        $stmt->close();
+
+        // Append pictures to the post
+        $row['pictures'] = $pictures;
         $posts[] = $row;
     }
 }
@@ -80,7 +66,7 @@ if ($postResult->num_rows > 0) {
 
 <head>
     <title>Administrator</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="../CSS/admin.css">
     <style>
         td,
         th {
@@ -318,22 +304,22 @@ if ($postResult->num_rows > 0) {
         <div id="postTable" style="display:none;">
             <?php foreach ($posts as $post) : ?>
                 <div class="postContainer">
+                    <!-- Checkbox for selecting the post -->
                     <input type="checkbox" name="delete_post_checkbox[]" value="<?php echo htmlspecialchars($post['postId']); ?>">
                     <h3><?php echo htmlspecialchars($post['postTitle']); ?></h3>
                     <div class="postPictures">
-
-                        <?php if (!empty($post['postId'])) : ?>
-                            <img src="getImage.php?postId=<?php echo htmlspecialchars($post['postId']); ?>" alt="Post Picture" width="100">
-                        <?php endif; ?>
-
-
+                        <?php foreach ($post['pictures'] as $picture) : ?>
+                            <img src="<?php echo $picture; ?>" alt="Post Picture" width="100">
+                        <?php endforeach; ?>
                     </div>
                     <p><?php echo htmlspecialchars($post['postContent']); ?></p>
                 </div>
             <?php endforeach; ?>
-            <button type="submit" id="deletePosts">Delete Selected Post(s)</button>
+            <!-- Button to delete selected posts -->
+            <button type="submit" id="deletePosts" style="margin-top: 20px;">Delete Selected Posts</button>
         </div>
     </form>
+
 
 
 
