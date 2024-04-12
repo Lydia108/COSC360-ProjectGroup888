@@ -234,9 +234,9 @@ if ($postsResult->num_rows > 0) {
     <?php foreach ($posts as $row): ?>
     <div class="post" title="Click for more details"
         onclick="window.location.href='content.php?postId=<?= $row['postId']; ?>';">
-        
+
         <?php if ($row['commentCount'] >= 5): ?>
-            <i class="fa-solid fa-fire"></i>
+        <i class="fa-solid fa-fire"></i>
         <?php endif; ?>
         <p class="title"><?= htmlspecialchars($row['postTitle']); ?><span class="postTag">
                 (<?= htmlspecialchars($row['postTag']); ?>)</span></p>
@@ -252,13 +252,9 @@ if ($postsResult->num_rows > 0) {
                 alt="User avatar" id="test" />
             <p class="username" id="username">
                 <?= htmlspecialchars($row['firstName']) . " " . htmlspecialchars($row['lastName']); ?></p>
-            <a href="#" title="Like"><i class='far fa-thumbs-up' id="thumbsup"
-                    onclick="toggleLike(event, this)"></i></a>
-            <a href="#" title="Unlike"><i class='fas fa-thumbs-up' id="thumbsup1" style="display:none;"
-                    onclick="toggleLike(event, this)"></i></a>
         </div>
     </div>
-<?php endforeach; ?>
+    <?php endforeach; ?>
 
     <script>
     function toggleLike(event, element) {
