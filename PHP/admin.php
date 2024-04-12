@@ -82,15 +82,19 @@ if ($postResult->num_rows > 0) {
     function deleteUserVisibility() {
         var table = document.getElementById('userTable');
         var deleteButton = document.getElementById('deleteButton');
+        var searchUser = document.getElementById('searchUser');
 
         if (table.style.display === 'none') {
             table.style.display = 'table';
             deleteButton.style.display = 'block';
+            searchUser.style.display = 'block';
         } else {
             table.style.display = 'none';
             deleteButton.style.display = 'none';
+            searchUser.style.display = 'none';
         }
     }
+
 
 
     function deleteSelected() {
@@ -169,6 +173,25 @@ if ($postResult->num_rows > 0) {
             deleteButton.style.display = 'none';
         }
     }
+
+    function searchUsersByFullName() {
+        var input = document.getElementById("searchUser");
+        var filter = input.value.toUpperCase();
+        var table = document.getElementById("userTable");
+        var tr = table.getElementsByTagName("tr");
+
+        for (var i = 0; i < tr.length; i++) {
+            var td = tr[i].getElementsByTagName("td")[2];
+            if (td) {
+                var txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
     </script>
 
 </head>
@@ -179,7 +202,8 @@ if ($postResult->num_rows > 0) {
     <button onclick="deleteUserVisibility()" id="deleteUser">Delete User</button>
     <button onclick="deletePostVisibility()" id="deletePost">Delete Post</button>
     <button onclick="checkWebUsage()" id="checkUsage">Usage</button>
-
+    <input class='searchUser' id='searchUser' placeholder='search users by name' style="display:none;"
+        onkeyup="searchUsersByFullName()" />
     <table id="userTable" border="1" style="display:none;">
         <thead>
             <tr>
@@ -205,6 +229,7 @@ if ($postResult->num_rows > 0) {
 
 
     <button id="deleteButton" style="display:none;" onclick="deleteSelected()">Delete Selected User(s)</button>
+
     <form method="POST" action="deletePost.php">
         <div id="postTable" style="display:none;">
             <?php foreach ($posts as $post) : ?>
@@ -229,7 +254,7 @@ if ($postResult->num_rows > 0) {
     <script>
     <?php if (isset($_SESSION['message'])) : ?>
     alert("<?php echo $_SESSION['message']; ?>");
-    <?php unset($_SESSION['message']); ?> 
+    <?php unset($_SESSION['message']); ?>
     <?php endif; ?>
     </script>
     <div id="usageStats"></div>
